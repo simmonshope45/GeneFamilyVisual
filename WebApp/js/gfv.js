@@ -13,6 +13,7 @@ var p = {
     exonStartSize: 20,
     exonGrowPerEdge: 3,
     hoverGrow: 20,
+    edgeMargin: 15,
 };
 p.center = p.height / 2.5;
 
@@ -36,6 +37,7 @@ class Graph {
         }
     }
 
+    // method to add an exon to the graph
     addExon(column) {
         // create and exon
         var exon = new Exon(column);
@@ -89,6 +91,80 @@ class Graph {
         }
 
     }
+
+
+    // method to add an edge between two exons
+    addEdge(exon1, exon2) {
+        // get positions of exons
+        var x1 = exon1.graphic.attr("cx");
+        var y1 = exon1.graphic.attr("cy");
+        var x2 = exon2.graphic.attr("cx");
+        var y2 = exon2.graphic.attr("cy");
+
+        // create the line (edge graphic)
+        var edge = this.edgesLayer.append("line");
+        edge.attr("x1", x1)
+            .attr("y1", y1)
+            .attr("x2", x2)
+            .attr("y2", y2)
+            .attr("stroke-width", 2)
+            .attr("stroke", "black");
+
+        // add the edge to the exons respective in and out edge lists
+        exon1.outEdges.push(edge);
+        exon2.inEdges.push(edge);
+
+        // increase the size of the exons if needed
+        exon1.radius = p.exonStartSize + Math.max(exon1.inEdges.length, exon1.outEdges.length) * p.exonGrowPerEdge;
+        exon1.growRadius = exon1.radius + p.hoverGrow;
+        exon1.graphic.attr("rx", exon1.radius);
+        exon1.graphic.attr("ry", exon1.radius);
+
+        // same for exon 2
+        exon2.radius = p.exonStartSize + Math.max(exon2.inEdges.length, exon2.outEdges.length) * p.exonGrowPerEdge;
+        exon2.growRadius = exon2.radius + p.hoverGrow;
+        exon2.graphic.attr("rx", exon2.radius);
+        exon2.graphic.attr("ry", exon2.radius);
+
+        // if exon1 has more than one outgoing edge, determine where the edges should be positioned
+        if (exon1.outEdges.length > 1) {
+            // get the coordinates for the top of the exon
+            var topEdgeHeight = exon1.graphic.attr("cy") - (exon1.graphic.attr("ry"));
+            // calculae the proper space between each edge
+            var edgePadding = (exon1.graphic.attr("ry") * 2 - (p.edgeMargin * 2) ) / (exon1.outEdges.length-1);
+
+            // loop through all outgoing edges and set position
+            for (var i = 0; i < exon1.outEdges.length; i++) {
+                exon1.outEdges[i].attr("y1", topEdgeHeight + i * edgePadding + p.edgeMargin);
+            }
+        }
+
+        // if exon2 has more than one incoming edge, determine where the edges should be positioned
+        if (exon2.inEdges.length > 1) {
+            // get the coordinates for the top of the exon
+            topEdgeHeight = exon2.graphic.attr("cy") - (exon2.graphic.attr("ry"));
+            // calculae the proper space between each edge
+            edgePadding = (exon2.graphic.attr("ry") * 2 - (p.edgeMargin * 2) ) / (exon2.inEdges.length-1);
+
+            // loop through all incoming edges and set position
+            for (var i = 0; i < exon2.inEdges.length; i++) {
+                exon2.inEdges[i].attr("y1", topEdgeHeight + i * edgePadding + p.edgeMargin);
+            }
+        }
+
+        if (exon2.inEdges.length > 1) {
+            // do the same for the exon2's incoming edges
+            topEdgeHeight = exon2.graphic.attr("cy") - (exon2.graphic.attr("ry"));
+            edgePadding = (exon2.graphic.attr("ry") * 2 - (p.edgeMargin * 2) ) / (exon2.inEdges.length-1);
+
+            // loop through all incoming edges and set position
+            for (var i = 0; i < exon2.inEdges.length; i++) {
+                exon2.inEdges[i].attr("y2", topEdgeHeight + i * edgePadding + p.edgeMargin);
+            }
+        }
+
+
+    }
 }
 
 
@@ -118,10 +194,35 @@ class Exon {
 }
 
 
+// Gene family class definition
+class GeneFamily {
+    constructor(exons, color) {
+        this.exons = exons;
+        this.color = color;
+        this.edges = [];
+    }
+}
+
+// Edge family class definition
+class Edge {
+    constructor(exon1, exon2) {
+
+    }
+}
+
+
+
 // main
 var visual = new Graph();
 visual.addExon(2);
-visual.addExon(2);
-visual.addExon(2);
-visual.addExon(2);
+visual.addExon(3);
+// visual.addExon(2);
+// visual.addExon(2);
+
+visual.addEdge(visual.exons[0], visual.exons[1]);
+visual.addEdge(visual.exons[0], visual.exons[1]);
+visual.addEdge(visual.exons[0], visual.exons[1]);
+visual.addEdge(visual.exons[0], visual.exons[1]);
+visual.addEdge(visual.exons[0], visual.exons[1]);
+// visual.addEdge(visual.exons[0], visual.exons[1]);
 // var exon = new Exon(1);
