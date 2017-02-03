@@ -76,6 +76,7 @@ class Graph {
         this.exons.push(exon);
 
 
+
         exon.text = this.svg.append("text")
               .attr("x", this.exons[this.exons.length-1].graphic.attr("cx"))
               .attr("y", this.exons[this.exons.length-1].graphic.attr("cy"))
@@ -99,12 +100,8 @@ class Graph {
             for (var i = 0; i < this.exonsInColumn[column].length; i++) {
                 this.exonsInColumn[column][i].graphic.attr("cy", topExonPos + (p.yPadding * i));
                 this.exonsInColumn[column][i].text.attr("y", topExonPos + (p.yPadding * i));
-                console.log(this.exonsInColumn[column][i].graphic.attr("cy"));
             }
         }
-
-
-
     }
 
     // method to add a gene family to the graph
@@ -118,7 +115,6 @@ class Graph {
 
         // create a new GeneFamily Object
         var family = new GeneFamily(exonsInFamily, color);
-        console.log(family);
 
         for (var i = 0; i < family.exons.length-1; i++) {
             this.addEdge(family.exons[i], family.exons[i+1], color);
@@ -147,6 +143,10 @@ class Graph {
         exon1.outEdges.push(edge);
         exon2.inEdges.push(edge);
 
+        // add exons to their respective in/out exon list
+        exon1.outExons.push(exon2);
+        exon2.inExons.push(exon1);
+
         // increase the size of the exons if needed
         exon1.radius = p.exonStartSize + Math.max(exon1.inEdges.length, exon1.outEdges.length) * p.exonGrowPerEdge;
         exon1.growRadius = exon1.radius + p.hoverGrow;
@@ -172,19 +172,6 @@ class Graph {
             }
         }
 
-        // // if exon2 has more than one incoming edge, determine where the edges should be positioned
-        // if (exon2.inEdges.length > 1) {
-        //     // get the coordinates for the top of the exon
-        //     topEdgeHeight = exon2.graphic.attr("cy") - (exon2.graphic.attr("ry"));
-        //     // calculae the proper space between each edge
-        //     edgePadding = (exon2.graphic.attr("ry") * 2 - (p.edgeMargin * 2) ) / (exon2.inEdges.length-1);
-        //
-        //     // loop through all incoming edges and set position
-        //     for (var i = 0; i < exon2.inEdges.length; i++) {
-        //         exon2.inEdges[i].attr("y1", topEdgeHeight + i * edgePadding + p.edgeMargin);
-        //     }
-        // }
-
         if (exon2.inEdges.length > 1) {
             // do the same for the exon2's incoming edges
             topEdgeHeight = exon2.graphic.attr("cy") - (exon2.graphic.attr("ry"));
@@ -197,6 +184,25 @@ class Graph {
         }
 
         return edge;
+    }
+
+    // element positioning cleanup function
+    cleanGraph() {
+        // if the exon only has one outgoing edge and the exon it
+        // is attached to only has one incoming edge,
+        // vertically allign the exons
+        for (var i = 0; i < this.exons.length; i++) {
+            console.log("ALLIGN");
+            if (this.exons[i].outExons.length == 1 && this.exons[i].outExons[0].inExons.length == 1) {
+                // allign exon
+                this.exons[i].graphic.attr("cy", this.exons[i].outExons[0].graphic.attr("cy"));
+                // allign edge
+                this.exons[i].outEdges[0].attr("y1", this.exons[i].graphic.attr("cy"));
+                // allign text
+                this.exons[i].text.attr("y", this.exons[i].graphic.attr("cy"));
+            }
+
+        }
     }
 }
 
