@@ -3,10 +3,10 @@ var visual = new Graph();
 
 
 // create exons
+visual.addExon(1, "", true);
 visual.addExon(1);
-visual.addExon(1);
-visual.addExon(1);
-visual.addExon(1);
+visual.addExon(1, "", true);
+visual.addExon(1, "", true);
 visual.addExon(2);
 visual.addExon(2);
 visual.addExon(2);
@@ -40,23 +40,23 @@ visual.cleanGraph();
 
 
 
-// main
-var visual = new Graph();
-visual.addExon(2);
-visual.addExon(3);
-visual.addExon(4);
-visual.addExon(5);
-visual.addExon(2);
-visual.addExon(2);
-visual.addExon(2);
-visual.addExon(5);
+// // main
+// var visual = new Graph();
+// visual.addExon(2);
+// visual.addExon(3);
+// visual.addExon(4);
+// visual.addExon(5);
 // visual.addExon(2);
 // visual.addExon(2);
-
-visual.addGeneFamily([0, 1, 5, 6], 'blue');
-visual.addGeneFamily([1, 6], 'blue');
-visual.addGeneFamily([0, 1, 5, 6], 'blue');
-visual.addGeneFamily([0, 1, 5, 6], 'blue');
+// visual.addExon(2);
+// visual.addExon(5);
+// // visual.addExon(2);
+// // visual.addExon(2);
+//
+// visual.addGeneFamily([0, 1, 5, 6], 'blue');
+// visual.addGeneFamily([1, 6], 'blue');
+// visual.addGeneFamily([0, 1, 5, 6], 'blue');
+// visual.addGeneFamily([0, 1, 5, 6], 'blue');
 
 
 

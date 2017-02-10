@@ -39,41 +39,47 @@ class Graph {
     }
 
     // method to add an exon to the graph
-    addExon(column) {
+    addExon(column, text = "", fullyUTR = false) {
         // create and exon
-        var exon = new Exon(column);
+        var exon = new Exon(column, text, fullyUTR);
 
         // create a graphic for the exon
-        var graphic = this.svg.append("ellipse");
-        graphic.attr("cx", exon.x)
+        exon.graphic = this.svg.append("ellipse");
+
+        // properties
+        if (exon.fullyUTR == true) {
+            exon.graphic.style("stroke-dasharray", ("5, 5"));
+            exon.graphic.style("fill", "#d9d9d9");
+            exon.fill = "lightgrey";
+        }
+
+        exon.graphic.attr("cx", exon.x)
                .attr("cy", exon.y)
                .attr("rx", exon.radius)
                .attr("ry", exon.radius)
                .style("stroke-width", 2)
                .style("stroke", "black")
-               .style("fill", "white");
+               .style("fill", exon.fill);
 
 
         // make graphic grow on hover
-        graphic.on('mouseover', function(d){
+        exon.graphic.on('mouseover', function(d){
             d3.select(this).style("fill", "lightblue")
             d3.select(this).transition().attr("ry", exon.growRadius)
                                         .attr("rx", exon.growRadius)
                                         .duration(300);
         })
         // make graphic shrink on exit
-        graphic.on('mouseout', function(d){
-            d3.select(this).style("fill", "white")
+        exon.graphic.on('mouseout', function(d){
+            d3.select(this).style("fill", exon.fill)
             d3.select(this).transition().attr("ry", exon.radius)
                                         .attr("rx", exon.radius)
                                         .duration(300);
         })
 
-        // add the graphic to the exon
-        exon.graphic = graphic;
-
         // add exon to exon list
         this.exons.push(exon);
+
 
 
 
@@ -209,7 +215,7 @@ class Graph {
 
 // exon class definition
 class Exon {
-    constructor (column) {
+    constructor (column, text = "", fullyUTR = false) {
         // Exon position
         this.column = column;
         this.x = column * p.yPadding;
@@ -226,6 +232,11 @@ class Exon {
         // arrays of exons connected by incoming and outgoing edges
         this.inEdges = [];
         this.outEdges = [];
+
+        // exon properties
+        this.text = text;
+        this.fullyUTR = fullyUTR;
+        this.fill = "white";
 
         // exon graphic
         this.graphic = null;
