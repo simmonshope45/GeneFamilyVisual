@@ -14,6 +14,9 @@ var p = {
     exonGrowPerEdge: 3,
     hoverGrow: 15,
     edgeMargin: 15,
+
+    // number of columns
+    numColumns: 30,
 };
 p.center = p.height / 2.5;
 
@@ -32,8 +35,8 @@ class Graph {
         this.exons = [];
 
         // 2D array of exons at each x position
-        this.exonsInColumn = new Array(50);
-        for (var i = 0; i < 20; i++) {
+        this.exonsInColumn = new Array(p.numColumns);
+        for (var i = 0; i < p.numColumns; i++) {
           this.exonsInColumn[i] = new Array();
         }
     }
@@ -134,24 +137,24 @@ class Graph {
         return edge;
     }
 
-    // // element positioning cleanup function
-    // cleanGraph() {
-    //     // if the exon only has one outgoing edge and the exon it
-    //     // is attached to only has one incoming edge,
-    //     // vertically allign the exons
-    //     for (var i = 0; i < this.exons.length; i++) {
-    //         console.log("ALLIGN");
-    //         if (this.exons[i].outExons.length == 1 && this.exons[i].outExons[0].inExons.length == 1) {
-    //             // allign exon
-    //             this.exons[i].graphic.attr("cy", this.exons[i].outExons[0].graphic.attr("cy"));
-    //             // allign edge
-    //             this.exons[i].outEdges[0].attr("y1", this.exons[i].graphic.attr("cy"));
-    //             // allign text
-    //             this.exons[i].text.attr("y", this.exons[i].graphic.attr("cy"));
-    //         }
-    //
-    //     }
-    // }
+    // element positioning cleanup function
+    cleanGraph() {
+        // if the exon only has one outgoing edge and the exon it
+        // is attached to only has one incoming edge,
+        // vertically allign the exons
+        for (var i = 0; i < this.exons.length; i++) {
+            console.log("ALLIGN");
+            if (this.exons[i].outExons.length == 1 && this.exons[i].outExons[0].inExons.length == 1) {
+                // allign exon
+                this.exons[i].graphic.attr("cy", this.exons[i].outExons[0].graphic.attr("cy"));
+                // allign edge
+                this.exons[i].outEdges[0].attr("y1", this.exons[i].graphic.attr("cy"));
+                // allign text
+                this.exons[i].text.attr("y", this.exons[i].graphic.attr("cy"));
+            }
+
+        }
+    }
 }
 
 
@@ -177,6 +180,8 @@ class Exon {
         // Exon dimensions
         this.radius = p.exonStartSize;
         this.growRadius = this.radius + p.hoverGrow;
+
+        console.log("GROW RAD", this.growRadius);
 
         // arrays of exons connected by incoming and outgoing edges
         this.inExons = [];
@@ -212,15 +217,17 @@ class Exon {
                .style("fill", this.fill);
 
 
+        // get exon data as local variable
+        var exonData = this;
         // make graphic grow on hover
-        this.graphic.on('mouseover', function(d){
-           d3.select(this).style("fill", "lightblue");
-           d3.select(this).transition().attr("ry", this.growRadius).attr("rx", this.growRadius).duration(300);
-        })
+        this.graphic.on('mouseover', function(){
+            d3.select(this).style("fill", "lightblue");
+            d3.select(this).transition().attr("ry", exonData.growRadius).attr("rx", exonData.growRadius).duration(300);
+        });
         // make graphic shrink on exit
-        this.graphic.on('mouseout', function(d){
-            d3.select(this).style("fill", this.fill);
-            d3.select(this).transition().attr("ry", this.radius).attr("rx", this.radius).duration(300);
+        this.graphic.on('mouseout', function(){
+            d3.select(this).style("fill", exonData.fill);
+            d3.select(this).transition().attr("ry", exonData.radius).attr("rx", exonData.radius).duration(300);
         })
 
         // add text
@@ -235,7 +242,7 @@ class Exon {
            .text(this.graph.exons.length);
 
         // spread exons at a column out vertically
-        for (var column = 1; column < 10; column++) {
+        for (var column = 1; column < p.numColumns; column++) {
             // if there are more than one exons in a column, adjust positions of exons
             if (this.graph.exonsInColumn[column].length > 1) {
                 var totalHeight = p.yPadding * (this.graph.exonsInColumn[column].length-1);
