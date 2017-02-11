@@ -38,79 +38,7 @@ class Graph {
         }
     }
 
-    // method to add an exon to the graph
-    addExon(column, text = "", fullyUTR = false) {
-        // create and exon
-        var exon = new Exon(column, text, fullyUTR);
-
-        // create a graphic for the exon
-        exon.graphic = this.svg.append("ellipse");
-
-        // properties
-        if (exon.fullyUTR == true) {
-            exon.graphic.style("stroke-dasharray", ("5, 5"));
-            exon.graphic.style("fill", "#d9d9d9");
-            exon.fill = "lightgrey";
-        }
-
-        exon.graphic.attr("cx", exon.x)
-               .attr("cy", exon.y)
-               .attr("rx", exon.radius)
-               .attr("ry", exon.radius)
-               .style("stroke-width", 2)
-               .style("stroke", "black")
-               .style("fill", exon.fill);
-
-
-        // make graphic grow on hover
-        exon.graphic.on('mouseover', function(d){
-            d3.select(this).style("fill", "lightblue")
-            d3.select(this).transition().attr("ry", exon.growRadius)
-                                        .attr("rx", exon.growRadius)
-                                        .duration(300);
-        })
-        // make graphic shrink on exit
-        exon.graphic.on('mouseout', function(d){
-            d3.select(this).style("fill", exon.fill)
-            d3.select(this).transition().attr("ry", exon.radius)
-                                        .attr("rx", exon.radius)
-                                        .duration(300);
-        })
-
-        // add exon to exon list
-        this.exons.push(exon);
-
-
-
-
-        exon.text = this.svg.append("text")
-              .attr("x", this.exons[this.exons.length-1].graphic.attr("cx"))
-              .attr("y", this.exons[this.exons.length-1].graphic.attr("cy"))
-              .attr("font-family","sans-serif")
-              .attr("pointer-events","none")
-              .attr("font-size",12)
-              .style("text-anchor", "middle")
-              .style("dominant-baseline", "middle")
-              .text(this.exons.length-1);
-
-        // add exon to exons in column list
-        this.exonsInColumn[column].push(exon);
-
-
-        // if there are more than one exons in a column, adjust positions of exons
-        if (this.exonsInColumn[column].length > 1) {
-            var totalHeight = p.yPadding * (this.exonsInColumn[column].length-1);
-            var topExonPos = p.center - (totalHeight * .5);
-
-            // reposition all of the exons at proper positions
-            for (var i = 0; i < this.exonsInColumn[column].length; i++) {
-                this.exonsInColumn[column][i].graphic.attr("cy", topExonPos + (p.yPadding * i));
-                this.exonsInColumn[column][i].text.attr("y", topExonPos + (p.yPadding * i));
-            }
-        }
-    }
-
-    // method to add a gene family to the graph
+        // method to add a gene family to the graph
     addGeneFamily (exonNumbers, color = 'black') {
         // exons in the family
         var exonsInFamily = [];
@@ -125,6 +53,20 @@ class Graph {
         for (var i = 0; i < family.exons.length-1; i++) {
             this.addEdge(family.exons[i], family.exons[i+1], color);
         }
+    }
+
+    // method to add an exon to the graph
+    addExon(column, text = "", length = 1, fullyUTR = false) {
+        // create and exon
+        var exon = new Exon(this, column, text, length, fullyUTR);
+
+        exon.render();
+        // add exon to exon list
+        this.exons.push(exon);
+
+        // add exon to exons in column list
+        this.exonsInColumn[column].push(exon);
+
     }
 
 
@@ -192,30 +134,41 @@ class Graph {
         return edge;
     }
 
-    // element positioning cleanup function
-    cleanGraph() {
-        // if the exon only has one outgoing edge and the exon it
-        // is attached to only has one incoming edge,
-        // vertically allign the exons
-        for (var i = 0; i < this.exons.length; i++) {
-            console.log("ALLIGN");
-            if (this.exons[i].outExons.length == 1 && this.exons[i].outExons[0].inExons.length == 1) {
-                // allign exon
-                this.exons[i].graphic.attr("cy", this.exons[i].outExons[0].graphic.attr("cy"));
-                // allign edge
-                this.exons[i].outEdges[0].attr("y1", this.exons[i].graphic.attr("cy"));
-                // allign text
-                this.exons[i].text.attr("y", this.exons[i].graphic.attr("cy"));
-            }
-
-        }
-    }
+    // // element positioning cleanup function
+    // cleanGraph() {
+    //     // if the exon only has one outgoing edge and the exon it
+    //     // is attached to only has one incoming edge,
+    //     // vertically allign the exons
+    //     for (var i = 0; i < this.exons.length; i++) {
+    //         console.log("ALLIGN");
+    //         if (this.exons[i].outExons.length == 1 && this.exons[i].outExons[0].inExons.length == 1) {
+    //             // allign exon
+    //             this.exons[i].graphic.attr("cy", this.exons[i].outExons[0].graphic.attr("cy"));
+    //             // allign edge
+    //             this.exons[i].outEdges[0].attr("y1", this.exons[i].graphic.attr("cy"));
+    //             // allign text
+    //             this.exons[i].text.attr("y", this.exons[i].graphic.attr("cy"));
+    //         }
+    //
+    //     }
+    // }
 }
+
+
+
+
+
 
 
 // exon class definition
 class Exon {
-    constructor (column, text = "", fullyUTR = false) {
+    constructor (graph, column, text = "", length = 1, fullyUTR = false) {
+        // Create a graphic for the exon
+        this.graphic = graph.svg.append("ellipse");
+
+        // pointer to graph
+        this.graph = graph;
+
         // Exon position
         this.column = column;
         this.x = column * p.yPadding;
@@ -235,11 +188,67 @@ class Exon {
 
         // exon properties
         this.text = text;
+        this.length = length;
         this.fullyUTR = fullyUTR;
         this.fill = "white";
+    }
 
-        // exon graphic
-        this.graphic = null;
+    // method to render the exon. This is to be called again when the exon properties are updated.
+    render() {
+        // set styles if exon is fullyUTR
+        if (this.fullyUTR == true) {
+            this.graphic.style("stroke-dasharray", ("5, 5"));
+            this.graphic.style("fill", "#d9d9d9");
+            this.fill = "lightgrey";
+        }
+
+        // positioning and scaling settings
+        this.graphic.attr("cx", this.x)
+               .attr("cy", this.y)
+               .attr("rx", this.radius)
+               .attr("ry", this.radius)
+               .style("stroke-width", 2)
+               .style("stroke", "black")
+               .style("fill", this.fill);
+
+
+        // make graphic grow on hover
+        this.graphic.on('mouseover', function(d){
+           d3.select(this).style("fill", "lightblue");
+           d3.select(this).transition().attr("ry", this.growRadius).attr("rx", this.growRadius).duration(300);
+        })
+        // make graphic shrink on exit
+        this.graphic.on('mouseout', function(d){
+            d3.select(this).style("fill", this.fill);
+            d3.select(this).transition().attr("ry", this.radius).attr("rx", this.radius).duration(300);
+        })
+
+        // add text
+        this.text = this.graph.svg.append("text")
+           .attr("x", this.graphic.attr("cx"))
+           .attr("y", this.graphic.attr("cy"))
+           .attr("font-family","sans-serif")
+           .attr("pointer-events","none")
+           .attr("font-size",12)
+           .style("text-anchor", "middle")
+           .style("dominant-baseline", "middle")
+           .text(this.graph.exons.length);
+
+        // spread exons at a column out vertically
+        for (var column = 1; column < 10; column++) {
+            // if there are more than one exons in a column, adjust positions of exons
+            if (this.graph.exonsInColumn[column].length > 1) {
+                var totalHeight = p.yPadding * (this.graph.exonsInColumn[column].length-1);
+                var topExonPos = p.center - (totalHeight * .5);
+
+                // reposition all of the exons at proper positions
+                for (var i = 0; i < this.graph.exonsInColumn[column].length; i++) {
+                    this.graph.exonsInColumn[column][i].graphic.attr("cy", topExonPos + (p.yPadding * i));
+                    this.graph.exonsInColumn[column][i].text.attr("y", topExonPos + (p.yPadding * i));
+                }
+            }
+        }
+
     }
 }
 
@@ -257,58 +266,3 @@ class GeneFamily {
 // var visual = new Graph();
 //
 //
-// // create exons
-// visual.addExon(1);
-// visual.addExon(1);
-// visual.addExon(1);
-// visual.addExon(1);
-// visual.addExon(2);
-// visual.addExon(2);
-// visual.addExon(2);
-// visual.addExon(2);
-// visual.addExon(2);
-// visual.addExon(2);
-// visual.addExon(2);
-// visual.addExon(3);
-// visual.addExon(3);
-// visual.addExon(3);
-// visual.addExon(4);
-// visual.addExon(4);
-// visual.addExon(5);
-// visual.addExon(6);
-// visual.addExon(7);
-// visual.addExon(8);
-// visual.addExon(8);
-// visual.addExon(8);
-// visual.addExon(8);
-// visual.addExon(8);
-// visual.addExon(8);
-// visual.addExon(8);
-// visual.addExon(8);
-//
-// visual.addGeneFamily([0, 4, 11, 14, 16, 17, 18, 19, 20, 22, 24], 'blue');
-// visual.addGeneFamily([5, 11, 15, 16, 17, 18, 19, 20, 22, 24], 'red');
-// visual.addGeneFamily([6, 12, 15, 16, 17, 18, 19, 20, 22, 24], 'orange');
-// visual.addGeneFamily([1, 7, 12, 15, 16, 17, 18, 19, 21, 24], 'lightblue');
-// visual.addGeneFamily([2, 8, 12, 15, 16, 17, 18, 19, 21, 23, 24], 'green');
-// visual.addGeneFamily([3, 9, 12, 15, 16, 17, 18, 19, 21, 23, 24], 'brown');
-
-
-
-// // main
-// var visual = new Graph();
-// visual.addExon(2);
-// visual.addExon(3);
-// visual.addExon(4);
-// visual.addExon(5);
-// visual.addExon(2);
-// visual.addExon(2);
-// visual.addExon(2);
-// visual.addExon(5);
-// // visual.addExon(2);
-// // visual.addExon(2);
-//
-// visual.addGeneFamily([0, 1, 5, 6], 'blue');
-// visual.addGeneFamily([1, 6], 'blue');
-// visual.addGeneFamily([0, 1, 5, 6], 'blue');
-// visual.addGeneFamily([0, 1, 5, 6], 'blue');
