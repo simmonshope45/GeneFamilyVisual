@@ -2,6 +2,8 @@
 var visual = new Graph();
 
 
+
+
 // create exons
 visual.addExon(1, "", 1, true);
 visual.addExon(1);
@@ -24,20 +26,18 @@ visual.addExon(6);
 visual.addExon(7);
 visual.addExon(8);
 visual.addExon(9);
-// visual.addExon(9);
-// visual.addExon(9);
+visual.addExon(9);
 visual.addExon(10);
 visual.addExon(10);
-// visual.addExon(11);
 
-// visual.addGeneFamily([0, 4, 11, 14, 16, 17, 18, 19, 20, 22, 24], 'blue');
-// visual.addGeneFamily([5, 11, 15, 16, 17, 18, 19, 20, 22, 24], 'red');
-// visual.addGeneFamily([6, 12, 15, 16, 17, 18, 19, 20, 22, 24], 'orange');
-// visual.addGeneFamily([1, 7, 12, 15, 16, 17, 18, 19, 21, 24], 'lightblue');
-// visual.addGeneFamily([2, 8, 12, 15, 16, 17, 18, 19, 21, 23, 24], 'green');
-// visual.addGeneFamily([3, 9, 12, 15, 16, 17, 18, 19, 21, 23, 24], 'brown');
+visual.addGeneFamily([0, 4, 11, 14, 16, 17, 18, 19, 20, 22, 24], 'blue');
+visual.addGeneFamily([5, 11, 15, 16, 17, 18, 19, 20, 22, 24], 'red');
+visual.addGeneFamily([6, 12, 15, 16, 17, 18, 19, 20, 22, 24], 'orange');
+visual.addGeneFamily([1, 7, 12, 15, 16, 17, 18, 19, 21, 24], 'lightblue');
+visual.addGeneFamily([2, 8, 12, 15, 16, 17, 18, 19, 21, 23, 24], 'green');
+visual.addGeneFamily([3, 9, 12, 15, 16, 17, 18, 19, 21, 23, 24], 'brown');
 
-// visual.cleanGraph();
+visual.cleanGraph();
 
 
 

@@ -7,10 +7,10 @@ var p = {
 
     // space between exons
     padding: 150,
-    yPadding: 100,
+    yPadding: 90,
 
     // exon graphic properties
-    exonStartSize: 20,
+    exonStartSize: 18,
     exonGrowPerEdge: 3,
     hoverGrow: 15,
     edgeMargin: 15,
@@ -18,7 +18,8 @@ var p = {
     // number of columns
     numColumns: 30,
 };
-p.center = p.height / 2.5;
+p.center = p.height / 2;
+
 
 
 // graph class definiton
@@ -41,11 +42,11 @@ class Graph {
         }
     }
 
-        // method to add a gene family to the graph
+    // method to add a gene family to the graph
     addGeneFamily (exonNumbers, color = 'black') {
         // exons in the family
         var exonsInFamily = [];
-        for (var i = 0; i < exonNumbers.length; i++) {
+        for (var i = 0; i < exonNumbers.length - 2; i++) {
             exonsInFamily.push(this.exons[exonNumbers[i]]);
         }
 
@@ -63,12 +64,13 @@ class Graph {
         // create and exon
         var exon = new Exon(this, column, text, length, fullyUTR);
 
-        exon.render();
         // add exon to exon list
         this.exons.push(exon);
-
         // add exon to exons in column list
         this.exonsInColumn[column].push(exon);
+
+        // render the exon
+        exon.render();
 
     }
 
@@ -181,7 +183,6 @@ class Exon {
         this.radius = p.exonStartSize;
         this.growRadius = this.radius + p.hoverGrow;
 
-        console.log("GROW RAD", this.growRadius);
 
         // arrays of exons connected by incoming and outgoing edges
         this.inExons = [];
@@ -239,23 +240,20 @@ class Exon {
            .attr("font-size",12)
            .style("text-anchor", "middle")
            .style("dominant-baseline", "middle")
-           .text(this.graph.exons.length);
+           .text(this.graph.exons.length-1);
 
         // spread exons at a column out vertically
-        for (var column = 1; column < p.numColumns; column++) {
+        for (var column = 0; column < p.numColumns; column++) {
             // if there are more than one exons in a column, adjust positions of exons
-            if (this.graph.exonsInColumn[column].length > 1) {
-                var totalHeight = p.yPadding * (this.graph.exonsInColumn[column].length-1);
-                var topExonPos = p.center - (totalHeight * .5);
+            var totalHeight = p.yPadding * (this.graph.exonsInColumn[column].length);
+            var topExonPos = p.center - (totalHeight * .5);
 
-                // reposition all of the exons at proper positions
-                for (var i = 0; i < this.graph.exonsInColumn[column].length; i++) {
-                    this.graph.exonsInColumn[column][i].graphic.attr("cy", topExonPos + (p.yPadding * i));
-                    this.graph.exonsInColumn[column][i].text.attr("y", topExonPos + (p.yPadding * i));
-                }
+            // reposition all of the exons at proper positions
+            for (var i = 0; i < this.graph.exonsInColumn[column].length; i++) {
+                this.graph.exonsInColumn[column][i].graphic.attr("cy", topExonPos + (p.yPadding * i));
+                this.graph.exonsInColumn[column][i].text.attr("y", topExonPos + (p.yPadding * i));
             }
         }
-
     }
 }
 
