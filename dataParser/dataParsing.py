@@ -50,6 +50,7 @@ class Gene(object):
         #line color for this gene
         self.color = ''
 
+# dictionary of 3 letter convert to 24 amino acid
 dnaToProtD = {
     "TTT":'F', "TTC":'F', "TTA":'L', "TTG":'L',
     "CTT":'L', "CTC":'L', "CTA":'L', "CTG":'L',
@@ -72,12 +73,23 @@ dnaToProtD = {
     "GGT":'G', "GGC":'G', "GGA":'G', "GGG":'G'
 }
 
+# convert DNA into protein
+# initialize aminos as a list of amino acids from each slice 3 letter DNA strand
+# initialize protein as a string from join aminos list
+# return protein
+
 def dna_to_prot(strand):
     aminos = [ dnaToProtD[strand[i:i+3] ] for i in range(0, len(strand), 3) ]
     protein = "".join(aminos)
     return protein
 
 # make a new directory with a random name (in the files directory)
+# if files directory has not made, create one and set permission to 0o777
+# initialize newDir as a random string, such as 424e069cb11ecc4f5712c3863c9cfba1
+# initialize a global path to use late in Main()
+# store a path of newDir into path string
+# if newDir is not exist in files dirctory, create one and set permission to 0o777
+
 def mkDir():
     if not os.path.exists("files"):
         os.makedirs("files")
@@ -91,7 +103,11 @@ def mkDir():
         os.makedirs(path)
         #os.chmod(path, 0o755)
         os.chmod(path, 0o777) # DEBUGGING
-#add argument for dataPrcoess for checking if there is afa in command line
+
+# add argument for dataPrcoess for checking if there is afa in command line
+# afa can be string of aligned file
+# or False if user do not provide aligned file
+
 def dataProcess(afa): 
     # get the files in the directory
     listing = os.listdir(path)
@@ -192,7 +208,7 @@ def dataProcess(afa):
 
         gene_dic[name] = gene
 
- call clustal omega
+    #call clustal omega
     in_file = path + "/ALL.txt"
 
     # if there is --afa command line use the aligned from user
@@ -510,17 +526,42 @@ def main():
     
     message = ""
 
+    # make a new unique directory in files directory
+    # as well include initialize path a global which store path new directory
     mkDir()
-    #declaration for argparse
+
+    # definies what arguments are setup in program
+    # initialize useArgv as boolean to check if user use command-line or CGI form
+    # initialize parser as Argument Parser to what are argument setup
+    # set aligned file as an optional argument for user
+    # set list of fasta file to run program
+    # initialize args to hold all arugment user provide
+
     useArgv = False
     parser = argparse.ArgumentParser()
     parser.add_argument("-a", "--afa", metavar="", help="provide aligned file for cluster mega")
-    parser.add_argument("files",nargs="*", help="list fasta file type")
+    parser.add_argument("files",nargs="*", help="list of fasta file type")
     args = parser.parse_args()
+
+    # program require a list of fasta file to run a program
+    # so check if user provide fasta file 
+    # if not, print usage for user and terminate program
+
+    if not args.files:
+        print("usage: dataParsing.py [-h]/[--help]")
+        print("usage: dataParsing.py [list of fasta file]")
+        print("usage: dataParsing.py [-a]/[--afa] [aligned file] [list of fasta file]")
+        sys.exit(0)
 
     #
     # get input file(s) from either the CGI form or from the command-line
-    #    
+    #
+
+    # if called from a CGI form
+    # initialize fileItems as list of filename through HTML Form
+    # for each fileItem in fileItems list do:
+    # copy all fileItem into a new directory by using path(global variable) in mkDir()
+   
     if 'GATEWAY_INTERFACE' in os.environ:  # Called from a CGI form
         fileItems = form['filename[]']
         for fileItem in fileItems:
@@ -539,6 +580,13 @@ def main():
                           </html>
                           """ %(path+'/'+fn))
                     sys.exit()
+
+    # if called from a command-line
+    # set useArgv to be True
+    # initialize list fieItems from args.files which user provide
+    # for each fileItem in fileItems list do:
+    # copy all fileItem into a new directory by using path(global variable) in mkDir()
+
     else:
         # get file(s) from the command-line
         useArgv = True
@@ -560,9 +608,15 @@ def main():
                       </html>
                       """ %(path+'/'+fn))
                 sys.exit()
-                     
+    
+    # initialize afa as filename of aligned file
+    # if user do NOT provide a file, afa will set as False value
+    # pass afa into dataProcess()
+                 
     afa = args.afa      #get the aligned provide, or set it as False if user dont provide the aligned
     dataProcess(afa)
+
+    # initialize redirectStr to display output of createSVGtemp.html if called from a CGI form
 
     redirectStr="""Content-Type: text/html\n\n
 <html>
@@ -574,6 +628,10 @@ def main():
     </body>
 </html>
 """
+
+    # if called from CGI form use redirectStr
+    # else print meassge of complete program
+
     if(not useArgv):
         os.system("echo 'DEBUGGING: redirectStr: " + redirectStr + "' > /tmp/hcarroll.tmp; chmod 777 /tmp/hcarroll.tmp")
         print(redirectStr)
