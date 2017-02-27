@@ -4,14 +4,14 @@
 Dr. C:   
 Arol:    Emailed
 Micah:   Title, find & review JSON specs (from previous meeting notes)
-Ethan:   
+Ethan:   Flowchart (phase I)
 Leewood: 
 
 ### To-Dos:
 Arol:    
 Micah:	 Test Cases for visual exons spanning multiple columns
-Ethan:   Flowchart
-Leewood: Comment CGI script
+Ethan:   Update json example;  Refine the flowchart; contact Dr. C; work on implemmenting the flowchart
+Leewood: 
 
 
 
