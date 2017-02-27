@@ -2,11 +2,13 @@
 var visual = new Graph();
 
 
+
+
 // create exons
-visual.addExon(1, "", true);
+visual.addExon(1, "", 1, true);
 visual.addExon(1);
-visual.addExon(1, "", true);
-visual.addExon(1, "", true);
+visual.addExon(1, "", 1, true);
+visual.addExon(1, "", 1, true);
 visual.addExon(2);
 visual.addExon(2);
 visual.addExon(2);
@@ -14,7 +16,7 @@ visual.addExon(2);
 visual.addExon(2);
 visual.addExon(2);
 visual.addExon(2);
-visual.addExon(3);
+visual.addExon(3, "", 2);
 visual.addExon(3);
 visual.addExon(3);
 visual.addExon(4);
@@ -27,7 +29,6 @@ visual.addExon(9);
 visual.addExon(9);
 visual.addExon(10);
 visual.addExon(10);
-visual.addExon(11);
 
 visual.addGeneFamily([0, 4, 11, 14, 16, 17, 18, 19, 20, 22, 24], 'blue');
 visual.addGeneFamily([5, 11, 15, 16, 17, 18, 19, 20, 22, 24], 'red');
