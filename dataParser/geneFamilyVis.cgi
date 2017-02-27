@@ -49,7 +49,8 @@ class Gene(object):
 
         #line color for this gene
         self.color = ''
-
+		
+# dictionary of 3 letter convert to 24 amino acid
 dnaToProtD = {
     "TTT":'F', "TTC":'F', "TTA":'L', "TTG":'L',
     "CTT":'L', "CTC":'L', "CTA":'L', "CTG":'L',
@@ -72,12 +73,23 @@ dnaToProtD = {
     "GGT":'G', "GGC":'G', "GGA":'G', "GGG":'G'
 }
 
+# convert DNA into protein
+# initialize aminos as a list of amino acids from each slice 3 letter DNA strand
+# initialize protein as a string from join aminos list
+# return protein
+
 def dna_to_prot(strand):
     aminos = [ dnaToProtD[strand[i:i+3] ] for i in range(0, len(strand), 3) ]
     protein = "".join(aminos)
     return protein
 
 # make a new directory with a random name (in the files directory)
+# if files directory has not made, create one and set permission to 0o777
+# initialize newDir as a random string, such as 424e069cb11ecc4f5712c3863c9cfba1
+# initialize a global path to use late in Main()
+# store a path of newDir into path string
+# if newDir is not exist in files dirctory, create one and set permission to 0o777
+
 def mkDir():
     if not os.path.exists("files"):
         os.makedirs("files")
@@ -92,7 +104,10 @@ def mkDir():
         #os.chmod(path, 0o755)
         os.chmod(path, 0o777) # DEBUGGING
 	
-# Argument afa used for checking if there is a multiple sequence alignment supplied from the command line
+# add argument for dataPrcoess for checking if there is afa in command line
+# afa can be string of aligned file
+# or False if user do not provide aligned file
+
 def dataProcess(afa): 
     # get the files in the directory
     listing = os.listdir(path)
@@ -101,6 +116,27 @@ def dataProcess(afa):
     gene_dic = {}
 
     # loop through every file in the directory
+	# For each file, initalize a gene object as follow;
+	#    gene.name:      the name of file
+	#    gene.ExonCount: using SeqIo.parse to get exon and its length
+	#    gene.CDS:       remove the UTR, by strip lowercase letter in exon
+	#    gene.CDS_len:   append of each length of CDS after strip lowercase
+	#    gene.Frames:    append of those follow:
+	#        CDSExonCount: count of each ExonCount
+	#        startFrame: if CDSExonCount is zero startFrame is '^'
+	#                    else get the ORF from the previous exon
+	#        stopFram:   if CDSLength % 3 == 0 --> '^'
+	#                    if CDSLength % 3 == 1 --> '<'
+	#                    if CDSLength % 3 == 2 --> '>'
+	#        CDSlength:  if CDSExonCount == 0 --> len(CDS)
+	#                    if CDSExonCount not 0 check prev-Frame is '<' --> -2
+	#                    if CDSExonCount not 0 check prev-Frame is '>' --> -1
+	#        exonLength: length of exon
+	#    gene.CDS:       CDSExon with trim off 1-2 nucleotides if the coding region is not a multiple of 3
+	#    gene.AA:        string of converted protein from called dna_to_prot(CDSExon)
+	#    gene.AA_len:    length of AA string
+	#  store each gene into gene_dic with its name
+	
     for infile in listing:
 
         # open the file
@@ -198,6 +234,7 @@ def dataProcess(afa):
 
     # if there is --afa on the command line, use the MSA from user
     # else use the aligned from the path in file folder
+	# either option: store Aligned_str into each gene in the gene_dictionary
     out_file = ""
     if afa:
         out_file = "./" + afa
@@ -229,6 +266,25 @@ def dataProcess(afa):
                 print( "Alignment: ", gene.Aligned_str.replace("-",""), "(any gaps were removed for this error message)")
                 sys.exit(1)    
 
+    # loop through each gene in the gene_dictionary
+    #   intialize frame_len to get integer of each gene.CDS_len divide 3
+	#   while frame_len is zero
+	#       go to next exon then append UTR_EXON into gene.Frames
+	#       also break if exon is more than length of gene.CDS_len
+	#       else frame_len is next exon of gene.CDS_len divide 3
+	#
+	#   for each char in gene.Aligned_str
+	#       if start is False, then set it to be true then append count into gene.Frame
+    #       else if frame_len is zero, go to next exon then append count into gene.Frames and get frame_len from gene.CSD_len divide 3
+	#       while frame_len is zero
+	#           append UTR_EXON into gene.Frame then go to next exon
+	#           get frame_len from gene.CSD_len divide 3
+	#       else set frame_len to be -1
+	#       increment count
+	# 
+	#   while exon is less than length of gene.CSD_len minus 1
+	#       go to next exon then append UTR_EXON into gene.Frames
+	
     for name, gene in gene_dic.items():
         count = 0  # alignment index
         exon = 0   # index of the current        exon for this gene
@@ -281,12 +337,22 @@ def dataProcess(afa):
     CombinedLists = []  # 1st index: genes; 2nd index items are: name, CDSExonCount, startFrame, stopFrame, CDSlength, exonLength, then AA alignment indicies
     geneIndex = 0
     # each gene is a row in CombinedLists
+	# append each element in gene.Frame into CombinedLists
     for name, gene in gene_dic.items():
         CombinedLists.append([name])
         for col in gene.Frames:
             CombinedLists[geneIndex].append(col)
         geneIndex += 1
 
+    # initialize preFinal to ...
+	# for each list in CombinedLists as frameInfoList
+	#   intialize name1 as first element in list which is name of gene
+	#   append name into preFinal
+	#   for each element in frameInfoList except first element name
+	#       if alignmentIndex_firstExon is UTR_EXON, then append alignmentIndex_firstExon and exonSize
+	#       else if count == 0
+	#           for  in CombinedLists
+		
     preFinal = []
     count = 0
     for frameInfoList in CombinedLists:
@@ -511,17 +577,42 @@ def main():
     
     message = ""
 
+    # make a new unique directory in files directory
+    # as well include initialize path a global which store path new directory	
+	
     mkDir()
-    #declaration for argparse
+    # definies what arguments are setup in program
+    # initialize useArgv as boolean to check if user use command-line or CGI form
+    # initialize parser as Argument Parser to what are argument setup
+    # set aligned file as an optional argument for user
+    # set list of fasta file to run program
+    # initialize args to hold all arugment user provide
+
     useArgv = False
     parser = argparse.ArgumentParser()
     parser.add_argument("-a", "--afa", metavar="", help="provide aligned file for cluster mega")
     parser.add_argument("files",nargs="*", help="fasta file(s)")
     args = parser.parse_args()
 
-    #
+    # program require a list of fasta file to run a program
+    # so check if user provide fasta file 
+    # if not, print usage for user and terminate program
+
+    if not args.files:
+        print("usage: dataParsing.py [-h]/[--help]")
+        print("usage: dataParsing.py [list of fasta file]")
+        print("usage: dataParsing.py [-a]/[--afa] [aligned file] [list of fasta file]")
+        sys.exit(0)
+
+	#
     # get input file(s) from either the CGI form or from the command-line
-    #    
+    #
+
+    # if called from a CGI form
+    # initialize fileItems as list of filename through HTML Form
+    # for each fileItem in fileItems list do:
+    # copy all fileItem into a new directory by using path(global variable) in mkDir()
+	
     if 'GATEWAY_INTERFACE' in os.environ:  # Called from a CGI form
         fileItems = form['filename[]']
         for fileItem in fileItems:
@@ -540,6 +631,13 @@ def main():
                           </html>
                           """ %(path+'/'+fn))
                     sys.exit()
+					
+	# if called from a command-line
+    # set useArgv to be True
+    # initialize list fieItems from args.files which user provide
+    # for each fileItem in fileItems list do:
+    # copy all fileItem into a new directory by using path(global variable) in mkDir()
+	
     else:
         # get file(s) from the command-line
         useArgv = True
@@ -561,10 +659,16 @@ def main():
                       </html>
                       """ %(path+'/'+fn))
                 sys.exit()
-                     
+    
+    # initialize afa as filename of aligned file
+    # if user do NOT provide a file, afa will set as False value
+    # pass afa into dataProcess()
+	 
     afa = args.afa      #get the aligned provide, or set it as False if user dont provide the aligned
     dataProcess(afa)
 
+    # initialize redirectStr to display output of createSVGtemp.html if called from a CGI form	
+	
     redirectStr="""Content-Type: text/html\n\n
 <html>
     <head>
@@ -575,6 +679,10 @@ def main():
     </body>
 </html>
 """
+
+    # if called from CGI form use redirectStr
+    # else print meassge of complete program
+
     if(not useArgv):
         os.system("echo 'DEBUGGING: redirectStr: " + redirectStr + "' > /tmp/hcarroll.tmp; chmod 777 /tmp/hcarroll.tmp")
         print(redirectStr)
