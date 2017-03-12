@@ -1,4 +1,34 @@
 # Meeting Notes
+## Feb 27, 2017
+### Status reports (emailed before 8 AM the morning of our meeting):
+Dr. C:   
+Arol:    Emailed
+Micah:   Title, find & review JSON specs (from previous meeting notes)
+Ethan:   Flowchart (phase I)
+Leewood: 
+
+### To-Dos:
+Arol:    
+Micah:	 Test Cases for visual exons spanning multiple columns
+Ethan:   Update json example;  Refine the flowchart; contact Dr. C; work on implemmenting the flowchart
+Leewood: 
+
+
+
+## Feb 13, 2017
+### Status reports (emailed before 8 AM the morning of our meeting):
+Dr. C:   
+Arol:    CGI scripts
+Micah:   (submitted via email)
+Ethan:   Milestones (done), started flowchart
+Leewood: 
+
+### To-Dos:
+Arol:    
+Micah:   Title, visual exons spanning multiple columns, find & review JSON specs (from previous meeting notes)
+Ethan:   Flowchart
+Leewood: Comment CGI script
+
 
 ## Feb 6, 2017
 ### Status reports (emailed before 8 AM the morning of our meeting):
