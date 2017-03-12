@@ -275,7 +275,7 @@ def dataProcess(afa):
 	#
 	#   for each char in gene.Aligned_str
 	#       if start is False, then set it to be true then append count into gene.Frame
-    #       else if frame_len is zero, go to next exon then append count into gene.Frames and get frame_len from gene.CSD_len divide 3
+        #       else if frame_len is zero, go to next exon then append count into gene.Frames and get frame_len from gene.CSD_len divide 3
 	#       while frame_len is zero
 	#           append UTR_EXON into gene.Frame then go to next exon
 	#           get frame_len from gene.CSD_len divide 3
@@ -409,11 +409,11 @@ def dataProcess(afa):
             rowCount += 1
         count +=1
 
-    # print("preFinal")
-    # for row in preFinal:
-    #     print(len(row))
-    #     print(row)
-    # print()
+    #print("preFinal")
+    for row in preFinal:
+        print(len(row))
+        print(row)
+    print()
 
     ###DEBUGGING SECTION TO SEE THE 2D ARRAY OF EXON LENGTHS
     i = 1
@@ -431,144 +431,13 @@ def dataProcess(afa):
         if startNum > maxStart:
             maxStart = startNum
     # print('max start is', maxStart)
-
-
-    #create random colors for each gene using colorsys library
-    numOfGenes = len(preFinal)
-    HSV_tuples = [(x*1.0/numOfGenes, 1, 1) for x in range(numOfGenes)]
-    RGB_tuples = map(lambda x: colorsys.hsv_to_rgb(*x), HSV_tuples)
-    RGB = []
-    for rgb in RGB_tuples:
-        temp = list(rgb)
-        temp = [int(color*255) for color in temp]
-        temp = ','.join(str(x) for x in temp)
-        RGB.append('rgb('+temp+')')
-
-    with open("createSVGtemp.html", "w") as printSVG:
+    
+    with open("createSVGtemp.html","w") as printSVG:
         printSVG.write("<html>\n")
         printSVG.write("<body>\n")
-        printSVG.write('<svg width=\"1000%\" height=\"300%\" style=\"overflow-x: auto; overflow-y: auto;\">\n')
+        printSVG.write("<p>dataParsing is completed, but still upgrade graph design</p>\n</body>\n</html>");
 
-        colCount = 0
-        xStart = 100
-        yStart = 130
-        xText = 0
-        yText = 0
-        xPrev = 0
-        yLine = 0
-        xLine = 0
-        xLineStart = 0
-        yLineStart = 0
-        xLineStop = 0
-        yLineStop = 0
-        rowCount = 0
-        prevExonCount = 0
-        prevNumOfExons = 0
-        exonCount = 0
-        firstX = 0
-        for row in preFinal:
-            y += yStart
-    #        if prevNumOfExons > 2:
-    #            y += ((prevNumOfExons-1)*3)
-            x = xStart
-            # print('xStart is ', xStart)
-            name = row[0]
-            colCount = 0
-            color = RGB[rowCount]
-            printSVG.write('\n<!--'+name+'-->\n')
-            # print(name)
-            prevNumOfExons = -1
-            prevExonCount = 0
-            prevDy = -1
-            for col in row[1:]:
-                count = 0
-                if colCount is 0:
-                    if col[0] >= -1:
-                        x = xStart + (maxStart * 75)
-                        firstX = x + 50
-                        # print('firstx is', firstX)
-                    else:
-                        firstX = xStart + (maxStart * 75) + 50
-                elif colCount > 0:
-                    if col[0] > -1:
-                        x = 3*col[0]
-                        # print('col[0] is', col[0], x, firstX)
-                        if col[0] < firstX:
-                            x = firstX + 60
-                        if x < prevX+50:
-                            x = prevX + 100
-                    elif  col[0] is -1:
-                        x = 3*col[1][2]
-                        # print('col[1][2]', col[1][2], x, firstX)
-                        if col[1][2] < firstX:
-                            x = firstX + 60
-                        if x < prevX+50:
-                            x = prevX + 100
-                    elif col[0] is UTR_EXON:
-                        x = prevX + 60
-                    printSVG.write('<text x=\"'+str(25)+'\" y=\"'+str((y+(y+50))/2)+'\" style=\"stroke:'+color+'\">\"'+name+'\"</text>')
-     #               printSVG.write('<line x1=\"'+str((prevX+50))+'\" y1=\"'+str((yLineStart))+'\"x2=\"'+str((x))+'\" y2=\"'+str((yLineStop))+'\" style=\"stroke:'+color+'; stroke-width:2\"/>\n')
-                numOfExons = len(col)-1
-                dy = 50 + (50 * 0.25 * (numOfExons-1))
-                if col[0] == UTR_EXON:
-                    dasharray = 'stroke-dasharray: 10 5;'
-                else:
-                    dasharray = ''
-                if col[0] != -1:
-                    printSVG.write('<rect x=\"'+str(x)+'\" y=\"'+str(y)+'\" rx=\"10\" ry=\"10\" width=\"50\" height=\"'+str(dy)+'\" style=\"fill:white;stroke:rgb(0,0,0);stroke-width:2;'+dasharray+'\" />\n')
-                    while count < numOfExons:
-                        xText = x + 10
-                        if numOfExons == 1:
-                            yText = (y + (y+dy))/2
-                        elif count is 0:
-                            yText = y + dy/numOfExons
-                        if count == 0:
-                            printSVG.write('<text x =\"'+str(xText)+'\" y=\"'+str(yText)+'\">'+str(col[1])+'</text>\n')
-                        else:
-                            yText += 15
-                            printSVG.write('<text x =\"'+str(xText)+'\" y=\"'+str(yText)+'\">'+str(col[count+1][2])+'</text>\n')
-                        count += 1
-                if col is not row[1]:
-                    exonCount = 0
-                    yLine = y
-                    prev = ''
-                    if col[0] is -1:
-                        yLine = 20 + (yStart * (col[1][0] + 1))
-                        prev = preFinal[col[1][0]][col[1][1] + 1]
-                        numOfExons = len(prev) -1
-                        dy =50 + (50 * 0.25 * (numOfExons-1))
-
-
-                    if numOfExons > 0:
-                        for i in range(len(prev)-2):
-                            if prev[i+2][0] is name:
-                                exonCount = i + 1
-                    if colCount is 1:
-                        prevExonCount = 0
-                    yLineStart = prevY + ((prevDy/(prevNumOfExons+1)) * (prevExonCount+1))
-                    yLineStop = yLine + ((dy/(numOfExons+1))) * (exonCount+1)
-                    printSVG.write('<line x1=\"'+str((prevX+50))+'\" y1=\"'+str((yLineStart))+'\"x2=\"'+str((x))+'\" y2=\"'+str((yLineStop))+'\" style=\"stroke:'+color+'; stroke-width:2\"/>\n')
-
-                colCount +=1
-                if col[0] is not -1:
-                    prevNumOfExons = numOfExons
-                    prevDy = dy
-                    prevY = y
-                    prevX = x
-                    prevExonCount = exonCount
-                elif col[0] is -1:
-                    prevNumOfExons = numOfExons
-                    prevDy = dy
-                    prevY = yLine
-                    prevX = x
-                    prevExonCount = exonCount
-
-
-            rowCount += 1
-
-        printSVG.write("\n</body>\n")
-        printSVG.write("</html>")
-
+    sys.exit(0)
 
 def main():
     # os.system("chmod -R 777 files")
