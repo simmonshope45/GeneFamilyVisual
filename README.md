@@ -1,4 +1,24 @@
 # Meeting Notes
+
+## Mar 13, 2017
+json record format:
+---------------------------------
+dictionary, with gene names as keys, and a list of exon properties (dictionaries) as the values
+The exon properties dictionary with the following keys:
++ Length  (number of nucleotides)
++ (ending) reading frame [0-2]
++ Visual exon columns (list of 2 elements, start and end [so most visual exons have the same start and end values])
++ UTR type [0-2] (0: Not a UTR, 1: partial UTR, 2: full UTR)
++ start MSA alignment position
++ end MSA alignment position
+An additional key "exonSet", with a list of all unique exon properties (just reading frame and visual exon columns)
+
+The set of unique visual exons is governed by the reading frame and visual exon columns list
+
+### Status reports (emailed before 8 AM the morning of our meeting):
+
+
+
 ## Feb 27, 2017
 ### Status reports (emailed before 8 AM the morning of our meeting):
 Dr. C:   
