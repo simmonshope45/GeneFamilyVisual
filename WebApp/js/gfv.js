@@ -1,8 +1,8 @@
 // global properties object
 var p = {
     // get graph deimensions
-    height: screen.height,
-    width: screen.width * 4,
+    height: window.innerHeight,
+    width: window.innerWidth,
     center: null,
 
     // space between exons
@@ -46,15 +46,13 @@ class Graph {
     addGeneFamily (exonNumbers, color = 'black') {
         // exons in the family
         var exonsInFamily = [];
-        for (var i = 0; i < exonNumbers.length - 2; i++) {
+        for (var i = 0; i < exonNumbers.length; i++) {
             exonsInFamily.push(this.exons[exonNumbers[i]]);
         }
-
-
         // create a new GeneFamily Object
         var family = new GeneFamily(exonsInFamily, color);
 
-        for (var i = 0; i < family.exons.length-1; i++) {
+        for (var i = 0; i < exonsInFamily.length-1; i++) {
             this.addEdge(family.exons[i], family.exons[i+1], color);
         }
     }
@@ -66,8 +64,12 @@ class Graph {
 
         // add exon to exon list
         this.exons.push(exon);
+
         // add exon to exons in column list
-        this.exonsInColumn[column].push(exon);
+        for (var i = 0; i < length; i++) {
+            this.exonsInColumn[column+i].push(exon);
+        }
+
 
         // render the exon
         exon.render();
@@ -90,7 +92,8 @@ class Graph {
             .attr("x2", x2)
             .attr("y2", y2)
             .attr("stroke-width", 2)
-            .attr("stroke", color);
+            .attr("stroke", color)
+            .style("stroke-dasharray", ("8, 2"));
 
         // add the edge to the exons respective in and out edge lists
         exon1.outEdges.push(edge);
@@ -100,17 +103,21 @@ class Graph {
         exon1.outExons.push(exon2);
         exon2.inExons.push(exon1);
 
-        // increase the size of the exons if needed
-        exon1.radius = p.exonStartSize + Math.max(exon1.inEdges.length, exon1.outEdges.length) * p.exonGrowPerEdge;
-        exon1.growRadius = exon1.radius + p.hoverGrow;
-        exon1.graphic.attr("rx", exon1.radius);
-        exon1.graphic.attr("ry", exon1.radius);
+        if (exon1.length == 1) {
+            // increase the size of the exons if needed
+            exon1.radius = p.exonStartSize + Math.max(exon1.inEdges.length, exon1.outEdges.length) * p.exonGrowPerEdge;
+            exon1.growRadius = exon1.radius + p.hoverGrow;
+            exon1.graphic.attr("rx", exon1.radius);
+            exon1.graphic.attr("ry", exon1.radius);
+        }
 
-        // same for exon 2
-        exon2.radius = p.exonStartSize + Math.max(exon2.inEdges.length, exon2.outEdges.length) * p.exonGrowPerEdge;
-        exon2.growRadius = exon2.radius + p.hoverGrow;
-        exon2.graphic.attr("rx", exon2.radius);
-        exon2.graphic.attr("ry", exon2.radius);
+        if (exon2.length == 1) {
+            // // same for exon 2
+            exon2.radius = p.exonStartSize + Math.max(exon2.inEdges.length, exon2.outEdges.length) * p.exonGrowPerEdge;
+            exon2.growRadius = exon2.radius + p.hoverGrow;
+            exon2.graphic.attr("rx", exon2.radius);
+            exon2.graphic.attr("ry", exon2.radius);
+        }
 
         // if exon1 has more than one outgoing edge, determine where the edges should be positioned
         if (exon1.outEdges.length > 1) {
@@ -141,12 +148,12 @@ class Graph {
 
     // element positioning cleanup function
     cleanGraph() {
-        // if the exon only has one outgoing edge and the exon it
-        // is attached to only has one incoming edge,
+        // if the exon only has one outgoing edge and no incoming edges
+        // and the exon it is attached to only has one incoming edge,
         // vertically allign the exons
         for (var i = 0; i < this.exons.length; i++) {
-            console.log("ALLIGN");
-            if (this.exons[i].outExons.length == 1 && this.exons[i].outExons[0].inExons.length == 1) {
+            if (this.exons[i].inExons == 0 && this.exons[i].outExons.length == 1 && this.exons[i].outExons[0].inExons.length == 1) {
+                console.log("ALLIGN");
                 // allign exon
                 this.exons[i].graphic.attr("cy", this.exons[i].outExons[0].graphic.attr("cy"));
                 // allign edge
@@ -156,106 +163,52 @@ class Graph {
             }
 
         }
+
+        // add title
+        this.svg.append("text")
+            .attr("x", (p.width / 2))
+            .attr("y", 100)
+            .attr("text-anchor", "middle")
+            .style("font-size", "24px")
+            .style("text-decoration", "underline")
+            .text("Gene Family Visualization");
+
+
+        // add legend
+        // this.svg.append("rect")
+                // .attr("x", )
+    }
+
+    // function to add lables
+    addLegend(index, label, color) {
+        var xPos = 300;
+        var yStartPos = 200;
+        var thickness = 15;
+        var spacing = 30;
+        var textPadding = 20;
+        var thickness = 15;
+
+        var x = p.width - xPos;
+        var y = p.height - yStartPos + index * spacing;
+
+        var l = this.svg.append("line");
+        l.attr("x1", x)
+         .attr("x2", x + thickness)
+         .attr("y1", y)
+         .attr("y2", y)
+         .attr("stroke-width", 15)
+         .attr("stroke", color);
+
+
+         var t = this.svg.append("text");
+             t.attr("x", x + textPadding)
+              .attr("y", y + thickness / 2.75)
+              .style("font-size", thickness)
+            //   .style("text-decoration", "underline")
+              .text(label);
     }
 }
 
-
-
-
-
-
-
-// exon class definition
-class Exon {
-    constructor (graph, column, text = "", length = 1, fullyUTR = false) {
-        // Create a graphic for the exon
-        this.graphic = graph.svg.append("ellipse");
-
-        // pointer to graph
-        this.graph = graph;
-
-        // Exon position
-        this.column = column;
-        this.x = column * p.yPadding;
-        this.y = p.center;
-
-        // Exon dimensions
-        this.radius = p.exonStartSize;
-        this.growRadius = this.radius + p.hoverGrow;
-
-
-        // arrays of exons connected by incoming and outgoing edges
-        this.inExons = [];
-        this.outExons = [];
-
-        // arrays of exons connected by incoming and outgoing edges
-        this.inEdges = [];
-        this.outEdges = [];
-
-        // exon properties
-        this.text = text;
-        this.length = length;
-        this.fullyUTR = fullyUTR;
-        this.fill = "white";
-    }
-
-    // method to render the exon. This is to be called again when the exon properties are updated.
-    render() {
-        // set styles if exon is fullyUTR
-        if (this.fullyUTR == true) {
-            this.graphic.style("stroke-dasharray", ("5, 5"));
-            this.graphic.style("fill", "#d9d9d9");
-            this.fill = "lightgrey";
-        }
-
-        // positioning and scaling settings
-        this.graphic.attr("cx", this.x)
-               .attr("cy", this.y)
-               .attr("rx", this.radius)
-               .attr("ry", this.radius)
-               .style("stroke-width", 2)
-               .style("stroke", "black")
-               .style("fill", this.fill);
-
-
-        // get exon data as local variable
-        var exonData = this;
-        // make graphic grow on hover
-        this.graphic.on('mouseover', function(){
-            d3.select(this).style("fill", "lightblue");
-            d3.select(this).transition().attr("ry", exonData.growRadius).attr("rx", exonData.growRadius).duration(300);
-        });
-        // make graphic shrink on exit
-        this.graphic.on('mouseout', function(){
-            d3.select(this).style("fill", exonData.fill);
-            d3.select(this).transition().attr("ry", exonData.radius).attr("rx", exonData.radius).duration(300);
-        })
-
-        // add text
-        this.text = this.graph.svg.append("text")
-           .attr("x", this.graphic.attr("cx"))
-           .attr("y", this.graphic.attr("cy"))
-           .attr("font-family","sans-serif")
-           .attr("pointer-events","none")
-           .attr("font-size",12)
-           .style("text-anchor", "middle")
-           .style("dominant-baseline", "middle")
-           .text(this.graph.exons.length-1);
-
-        // spread exons at a column out vertically
-        for (var column = 0; column < p.numColumns; column++) {
-            // if there are more than one exons in a column, adjust positions of exons
-            var totalHeight = p.yPadding * (this.graph.exonsInColumn[column].length);
-            var topExonPos = p.center - (totalHeight * .5);
-
-            // reposition all of the exons at proper positions
-            for (var i = 0; i < this.graph.exonsInColumn[column].length; i++) {
-                this.graph.exonsInColumn[column][i].graphic.attr("cy", topExonPos + (p.yPadding * i));
-                this.graph.exonsInColumn[column][i].text.attr("y", topExonPos + (p.yPadding * i));
-            }
-        }
-    }
-}
 
 
 // Gene family class definition
