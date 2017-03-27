@@ -2,8 +2,9 @@
 var p = {
     // get graph deimensions
     height: window.innerHeight,
-    width: window.innerWidth,
+    width: window.innerWidth * 2,
     center: null,
+    toppadding: 100,
 
     // space between exons
     padding: 150,
@@ -12,14 +13,13 @@ var p = {
     // exon graphic properties
     exonStartSize: 18,
     exonGrowPerEdge: 3,
-    hoverGrow: 15,
+    hoverGrow: 10,
     edgeMargin: 15,
 
     // number of columns
-    numColumns: 30,
+    numColumns: 35,
 };
-p.center = p.height / 2;
-
+p.center = p.height / 2 + p.toppadding;
 
 
 // graph class definiton
@@ -40,10 +40,63 @@ class Graph {
         for (var i = 0; i < p.numColumns; i++) {
           this.exonsInColumn[i] = new Array();
         }
+
+        this.geneFamilyList = [];
+    }
+
+    // function to add lables
+    addLegend(index, label, color) {
+        var xPos = 1650;
+        var yStartPos = 250;
+        var thickness = 15;
+        var spacing = 30;
+        var textPadding = 20;
+        var thickness = 15;
+
+        var x = xPos;
+        var y = p.height - yStartPos + index * spacing;
+
+        var l = this.svg.append("line");
+        l.attr("x1", x)
+         .attr("x2", x + thickness)
+         .attr("y1", y)
+         .attr("y2", y)
+         .attr("stroke-width", 15)
+         .attr("stroke", color);
+
+
+         var t = this.svg.append("text");
+             t.attr("x", x + textPadding)
+              .attr("y", y + thickness / 2.75)
+              .style("font-size", thickness)
+            //   .style("text-decoration", "underline")
+              .text(label);
+
+
+        // d3.electAll(".TRHDE").style("fill", "blue");
+        l.on("mouseover", function() {
+            d3.selectAll("." + label).style("fill", color);
+            // d3.selectAll("." + label).style("fill", "lightblue");
+        });
+
+        l.on("mouseout", function() {
+            d3.selectAll("." + label).style("fill", "white");
+        });
+        // d3.electAll(".TRHDE").style("fill", "blue");
+        t.on("mouseover", function() {
+            d3.selectAll("." + label).style("fill", color);
+            // d3.selectAll("." + label).style("fill", "lightblue");
+        });
+
+        t.on("mouseout", function() {
+            d3.selectAll("." + label).style("fill", "white");
+        });
     }
 
     // method to add a gene family to the graph
-    addGeneFamily (exonNumbers, color = 'black') {
+    addGeneFamily (exonNumbers, color = 'black', familyName = "family") {
+
+        this.geneFamilyList.push(familyName);
         // exons in the family
         var exonsInFamily = [];
         for (var i = 0; i < exonNumbers.length; i++) {
@@ -53,14 +106,16 @@ class Graph {
         var family = new GeneFamily(exonsInFamily, color);
 
         for (var i = 0; i < exonsInFamily.length-1; i++) {
-            this.addEdge(family.exons[i], family.exons[i+1], color);
+            this.addEdge(family.exons[i], family.exons[i+1], color, familyName);
         }
+
+        this.addLegend(this.geneFamilyList.length, familyName, color);
     }
 
     // method to add an exon to the graph
-    addExon(column, text = "", length = 1, fullyUTR = false) {
+    addExon(column, text = "", length = 1, fullyUTR = false, manX = null, manY = null) {
         // create and exon
-        var exon = new Exon(this, column, text, length, fullyUTR);
+        var exon = new Exon(this, column, text, length, fullyUTR, manX, manY);
 
         // add exon to exon list
         this.exons.push(exon);
@@ -76,9 +131,12 @@ class Graph {
 
     }
 
-
     // method to add an edge between two exons
-    addEdge(exon1, exon2, color = "black") {
+    addEdge(exon1, exon2, color = "black", familyName = "family") {
+
+        exon1.graphic.classed(familyName, true);
+        exon2.graphic.classed(familyName, true);
+
         // get positions of exons
         var x1 = exon1.graphic.attr("cx");
         var y1 = exon1.graphic.attr("cy");
@@ -93,7 +151,7 @@ class Graph {
             .attr("y2", y2)
             .attr("stroke-width", 2)
             .attr("stroke", color)
-            .style("stroke-dasharray", ("8, 2"));
+            // .style("stroke-dasharray", ("8, 2"));
 
         // add the edge to the exons respective in and out edge lists
         exon1.outEdges.push(edge);
@@ -118,6 +176,7 @@ class Graph {
             exon2.graphic.attr("rx", exon2.radius);
             exon2.graphic.attr("ry", exon2.radius);
         }
+
 
         // if exon1 has more than one outgoing edge, determine where the edges should be positioned
         if (exon1.outEdges.length > 1) {
@@ -152,7 +211,7 @@ class Graph {
         // and the exon it is attached to only has one incoming edge,
         // vertically allign the exons
         for (var i = 0; i < this.exons.length; i++) {
-            if (this.exons[i].inExons == 0 && this.exons[i].outExons.length == 1 && this.exons[i].outExons[0].inExons.length == 1) {
+            if (this.exons[i].inExons == 0 && this.exons[i].outExons.length == 1 && this.exons[i].outExons[0].inExons.length == 1 && this.exons[i].column == 1) {
                 console.log("ALLIGN");
                 // allign exon
                 this.exons[i].graphic.attr("cy", this.exons[i].outExons[0].graphic.attr("cy"));
@@ -166,47 +225,18 @@ class Graph {
 
         // add title
         this.svg.append("text")
-            .attr("x", (p.width / 2))
-            .attr("y", 100)
+            .attr("x", (1050))
+            .attr("y", p.toppadding)
             .attr("text-anchor", "middle")
             .style("font-size", "24px")
             .style("text-decoration", "underline")
             .text("Gene Family Visualization");
 
 
-        // add legend
-        // this.svg.append("rect")
                 // .attr("x", )
     }
 
-    // function to add lables
-    addLegend(index, label, color) {
-        var xPos = 300;
-        var yStartPos = 200;
-        var thickness = 15;
-        var spacing = 30;
-        var textPadding = 20;
-        var thickness = 15;
 
-        var x = p.width - xPos;
-        var y = p.height - yStartPos + index * spacing;
-
-        var l = this.svg.append("line");
-        l.attr("x1", x)
-         .attr("x2", x + thickness)
-         .attr("y1", y)
-         .attr("y2", y)
-         .attr("stroke-width", 15)
-         .attr("stroke", color);
-
-
-         var t = this.svg.append("text");
-             t.attr("x", x + textPadding)
-              .attr("y", y + thickness / 2.75)
-              .style("font-size", thickness)
-            //   .style("text-decoration", "underline")
-              .text(label);
-    }
 }
 
 
