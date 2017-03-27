@@ -1,6 +1,6 @@
 // exon class definition
 class Exon {
-    constructor (graph, column, text = "", length = 1, fullyUTR = false) {
+    constructor (graph, column, text = "", length = 1, fullyUTR = false, manX = null, manY = null) {
         // Create a graphic for the exon
         this.graphic = graph.svg.append("ellipse");
 
@@ -31,10 +31,21 @@ class Exon {
         this.length = length;
         this.fullyUTR = fullyUTR;
         this.fill = "white";
+
+        this.manX = manX;
+        this.manY = manY;
     }
 
     // method to render the exon. This is to be called again when the exon properties are updated.
     render() {
+
+
+
+        if (this.manX != null) {
+            this.x = this.manX;
+            this.y = this.manY;
+        }
+
         // set styles if exon is fullyUTR
         if (this.fullyUTR == true) {
             this.graphic.style("stroke-dasharray", ("5, 5"));
@@ -100,27 +111,30 @@ class Exon {
            .attr("font-size",12)
            .style("text-anchor", "middle")
            .style("dominant-baseline", "middle")
-           .text(this.graph.exons.length-1);
+        //    .text(this.graph.exons.length-1);
 
-          if (this.textString.length > 0) {
+        //   if (this.textString.length > 0) {
               this.text.text(this.textString);
-          }
-
+            //   this.text.text(this.textString + "," + (this.graph.exons.length-1));
+        //   }
 
 
         // spread exons at a column out vertically
-        for (var column = 0; column < p.numColumns; column++) {
-            // if there are more than one exons in a column, adjust positions of exons
-            var totalHeight = p.yPadding * (this.graph.exonsInColumn[column].length);
-            var topExonPos = p.center - (totalHeight * .5);
+        for (var column = 1; column < p.numColumns-1; column++) {
+            if (this.manX == null) {
+                // if there are more than one exons in a column, adjust positions of exons
+                var totalHeight = p.yPadding * (this.graph.exonsInColumn[column].length);
+                var topExonPos = p.center - (totalHeight * .5);
 
-            // reposition all of the exons at proper positions
-            for (var i = 0; i < this.graph.exonsInColumn[column].length; i++) {
-                this.graph.exonsInColumn[column][i].graphic.attr("cy", topExonPos + (p.yPadding * i));
-                this.graph.exonsInColumn[column][i].text.attr("y", topExonPos + (p.yPadding * i));
+                // reposition all of the exons at proper positions
+                for (var i = 0; i < this.graph.exonsInColumn[column].length; i++) {
+                    if (this.graph.exonsInColumn[column][i].manX == null) {
+                        this.graph.exonsInColumn[column][i].graphic.attr("cy", topExonPos + (p.yPadding * i));
+                        this.graph.exonsInColumn[column][i].text.attr("y", topExonPos + (p.yPadding * i));
+                    }
+                }
             }
         }
     }
-
 
 }
