@@ -1,5 +1,31 @@
 # Meeting Notes
 
+## Mar 27, 2017
+
+### Status reports
+
+### To-dos
+Ethan: Scholars' Week presentations; code to delimit visual exons
+Micah: Fine-tuning for presentations; Counter example(s) for visual exons spanning multiple columns
+Leewood: Researching JSON format
+
+## Mar 20, 2017
+
+json record format:
+---------------------------------
+A dictionary, with
+key0: "geneFamilyInfo", which is a dictionary, with gene names as keys, and a list of exon properties (dictionaries) as the values
+The exon properties dictionary with the following keys:
++ start MSA alignment position
++ end MSA alignment position
++ visual exon index
+key1: "visualExons", which is a list with each element having the following data:
++ (ending) reading frame [0-2]
++ Visual exon columns (list of 2 elements, start and end [so most visual exons have the same start and end values])
++ UTR type [0-2] (0: Not a UTR, 1: partial UTR, 2: full UTR)
+
+
+
 ## Mar 13, 2017
 json record format:
 ---------------------------------
