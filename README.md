@@ -1,5 +1,18 @@
 # Meeting Notes
 
+## Apr 3, 2017
+
+### Status reports
+Leewood: Emailed
+Ethan: Orange juice
+Micah: Algorithm for color selection
+
+
+### To-dos
+Ethan: 
+Micah: Find module for color selection (e.g., given 20 colors, return 20 complimentary hex values), example(s) for visual exons spanning multiple columns (default to placing them at the top or bottom?)
+Leewood: Researching JSON format
+
 ## Mar 27, 2017
 
 ### Status reports
