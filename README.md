@@ -1,5 +1,20 @@
 # Meeting Notes
 
+## Apr 10, 2017
+
+### Status reports
+Ethan: 
+Leewood: Emailed
+Micah: 
+
+
+### To-dos
+Ethan: Code to produce JSON records by April 24
+Leewood: 
+Micah: 
+
+
+
 ## Apr 3, 2017
 
 ### Status reports
