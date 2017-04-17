@@ -1,5 +1,19 @@
 # Meeting Notes
 
+## Apr 17, 2017
+
+### Status reports
+Ethan: Emailed
+Leewood: Emailed: Looked into sockets and files for transfering JSON string
+Micah: Worked on visualization
+
+
+### To-dos
+Ethan: Code to produce JSON records by April 24
+Leewood: Look into websockets and make a simple example
+Micah: Review what is uploaded to github; email Dr. Carroll (so that he can email Dr. Seipelt-Thiemann); 
+
+
 ## Apr 10, 2017
 
 ### Status reports
