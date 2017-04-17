@@ -52,7 +52,7 @@ class Graph {
 
     // function to add lables
     addLegend(index, label, color) {
-        var xPos = 1650;
+        var xPos = 300;
         var yStartPos = 250;
         var thickness = 15;
         var spacing = 30;
