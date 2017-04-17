@@ -18,7 +18,8 @@ visual.addExon(2, "841", 1, false);
 visual.addExon(2, "541", 1, false);
 visual.addExon(2, "697", 1, false);
 
-visual.addExon(0, "274", 2, false, 260, 300);
+// visual.addExon(0, "274", 2, false, 260, 300);
+visual.addExon(0, "274", 2, false, 260, p.center - p.yPadding * 2);
 visual.addExon(3, "143", 1, false);
 visual.addExon(3, "142/139", 1, false);
 
@@ -32,8 +33,8 @@ visual.addExon(8, "132...135", 1, false);
 
 
 visual.addExon(9, "66", 1, false);
-visual.addExon(0, "132", 2, false, 810, 520);
-visual.addExon(0, "72/69", 1, false, 950, 540);
+visual.addExon(0, "132", 2, false, 810, p.center + p.yPadding * .3);
+visual.addExon(0, "72/69", 1, false, 950, p.center + p.yPadding * .5);
 visual.addExon(10, "66", 1, false);
 
 visual.addExon(11, "152/2...88", 1, false);
@@ -41,13 +42,13 @@ visual.addExon(11, "152/2...88", 1, false);
 visual.addExon(12, "77/80/89", 1, false);
 
 visual.addExon(13, "134..140", 1, false);
-visual.addExon(0, "184", 2, false, 1165, 520);
+visual.addExon(0, "184", 2, false, 1165, p.center + p.yPadding * .3);
 visual.addExon(14, "56", 1, false);
 
 visual.addExon(15, "148/151", 1, false);
 
 visual.addExon(16, "92/74", 1, false);
-visual.addExon(0, "185", 2, false, 1450, 520);
+visual.addExon(0, "185", 2, false, 1450, p.center + p.yPadding * .3);
 visual.addExon(17, "111/105", 1, false);
 
 visual.addExon(18, "168/171", 1, false);
@@ -64,17 +65,25 @@ visual.addExon(21, "150", 1, false);
 
 
 
+colors = randomColors(8);
+console.log(colors);
 
-
-visual.addGeneFamily([4, 11, 16, 17, 18, 19, 20, 23, 24, 25, 26, 28, 29, 30, 32, 33, 34, 35, 36], 'red', "APQ");
-visual.addGeneFamily([0, 5, 12, 14, 16, 17, 18, 19, 20, 23, 24, 25, 26, 28, 29, 30, 32, 33, 34, 35, 37], 'pink', "ANPEP");
-visual.addGeneFamily([6, 12, 14, 16, 17, 18, 19, 20, 23, 24, 25, 26, 28, 29, 30, 32, 33, 34, 35, 38], 'green', "TRHDE");
-visual.addGeneFamily([7, 13, 15, 16, 17, 18, 19, 20, 23, 24, 25, 26, 28, 29, 30, 32, 33, 34, 35, 39], 'orange', "ENPEP");
-visual.addGeneFamily([3, 8, 13, 15, 16, 17, 18, 19, 21, 24, 25, 27, 29, 31, 33, 34, 35, 40], 'lightblue', "LNPEP");
-visual.addGeneFamily([2, 9, 13, 15, 16, 17, 18, 19, 21, 22, 24, 25, 27, 29, 31, 33, 34, 35, 41], 'lightgreen', "ERAP1");
-visual.addGeneFamily([1, 10, 13, 15, 16, 17, 18, 19, 21, 22, 24, 25, 27, 29, 31, 33, 34, 35, 42], 'lightblue', "ERAP2");
+visual.addGeneFamily([4, 11, 16, 17, 18, 19, 20, 23, 24, 25, 26, 28, 29, 30, 32, 33, 34, 35, 36], colors[0], "APQ");
+visual.addGeneFamily([0, 5, 12, 14, 16, 17, 18, 19, 20, 23, 24, 25, 26, 28, 29, 30, 32, 33, 34, 35, 37], colors[1], "ANPEP");
+visual.addGeneFamily([6, 12, 14, 16, 17, 18, 19, 20, 23, 24, 25, 26, 28, 29, 30, 32, 33, 34, 35, 38], colors[2], "TRHDE");
+visual.addGeneFamily([7, 13, 15, 16, 17, 18, 19, 20, 23, 24, 25, 26, 28, 29, 30, 32, 33, 34, 35, 39], colors[3], "ENPEP");
+visual.addGeneFamily([3, 8, 13, 15, 16, 17, 18, 19, 21, 24, 25, 27, 29, 31, 33, 34, 35, 40], colors[4], "LNPEP");
+visual.addGeneFamily([2, 9, 13, 15, 16, 17, 18, 19, 21, 22, 24, 25, 27, 29, 31, 33, 34, 35, 41], colors[5], "ERAP1");
+visual.addGeneFamily([1, 10, 13, 15, 16, 17, 18, 19, 21, 22, 24, 25, 27, 29, 31, 33, 34, 35, 42], colors[6], "ERAP2");
 
 visual.cleanGraph();
+
+
+function getRandomColor() {
+    return '#'+(5*Math.floor(Math.random()*4)).toString(16)+
+    (5*Math.floor(Math.random()*4)).toString(16)+
+    (5*Math.floor(Math.random()*4)).toString(16);
+}
 
 // visual.addLegend(0, "TRHDE", "green");
 // visual.addLegend(1, "APQ", "red");

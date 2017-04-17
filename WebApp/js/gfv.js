@@ -18,8 +18,13 @@ var p = {
 
     // number of columns
     numColumns: 35,
+    // xScale: window.innerWidth / 10,
+    // yScale: .height / 6,
+
 };
 p.center = p.height / 2 + p.toppadding;
+
+console.log(p.xScale);
 
 
 // graph class definiton
@@ -30,6 +35,7 @@ class Graph {
         this.textLayer = this.svg.append('g');
         this.edgesLayer = this.svg.append('g');
         this.exonLayer = this.svg.append('g');
+        this.topLayer = this.svg.append('g');
 
 
         // arry of all exons in the graph
@@ -62,35 +68,56 @@ class Graph {
          .attr("y1", y)
          .attr("y2", y)
          .attr("stroke-width", 15)
+         .attr("pointer-events", "none")
          .attr("stroke", color);
-
 
          var t = this.svg.append("text");
              t.attr("x", x + textPadding)
               .attr("y", y + thickness / 2.75)
               .style("font-size", thickness)
             //   .style("text-decoration", "underline")
+              .attr("pointer-events", "none")
               .text(label);
 
+         var h = this.topLayer.append("line");
+            h.attr("x1", x)
+             .attr("x2", x + thickness * 5)
+             .attr("y1", y)
+             .attr("y2", y)
+             .attr("stroke-width", 25)
+             .attr("stroke", "white")
+             .attr("fill-opacity", 0.0);
+
 
         // d3.electAll(".TRHDE").style("fill", "blue");
-        l.on("mouseover", function() {
+        h.on("mouseover", function() {
             d3.selectAll("." + label).style("fill", color);
-            // d3.selectAll("." + label).style("fill", "lightblue");
+            t.style("font-size", thickness * 1.2);
+            l.style("stroke-width", 15+2);
+
         });
 
-        l.on("mouseout", function() {
+        h.on("mouseout", function() {
             d3.selectAll("." + label).style("fill", "white");
+            t.style("font-size", thickness);
+            l.style("stroke-width", 15);
+        });
+
+        // d3.electAll(".TRHDE").style("fill", "blue");
+        h.on("mouseup", function() {
+            d3.selectAll("." + label).transition().style("fill", color).duration(400);
+            t.style("font-size", thickness * 1.2);
+            l.style("stroke-width", 15+2);
         });
         // d3.electAll(".TRHDE").style("fill", "blue");
-        t.on("mouseover", function() {
-            d3.selectAll("." + label).style("fill", color);
-            // d3.selectAll("." + label).style("fill", "lightblue");
-        });
-
-        t.on("mouseout", function() {
-            d3.selectAll("." + label).style("fill", "white");
-        });
+        // t.on("mouseover", function() {
+        //     d3.selectAll("." + label).style("fill", color);
+        //     // d3.selectAll("." + label).style("fill", "lightblue");
+        // });
+        //
+        // t.on("mouseout", function() {
+        //     d3.selectAll("." + label).style("fill", "white");
+        // });
     }
 
     // method to add a gene family to the graph

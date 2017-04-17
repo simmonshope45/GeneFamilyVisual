@@ -34,12 +34,13 @@ class Exon {
 
         this.manX = manX;
         this.manY = manY;
+
     }
+
+
 
     // method to render the exon. This is to be called again when the exon properties are updated.
     render() {
-
-
 
         if (this.manX != null) {
             this.x = this.manX;
