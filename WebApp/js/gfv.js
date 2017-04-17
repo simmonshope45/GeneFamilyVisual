@@ -31,7 +31,7 @@ console.log(p.xScale);
 class Graph {
     constructor() {
         // setup blank visual with proper dimensions
-        this.svg = d3.select("body").append("svg").attr("width", p.width).attr("height", p.height);
+        this.svg = d3.select("body").append("svg").attr("width", p.width* 5).attr("height", p.height * 5);
         this.textLayer = this.svg.append('g');
         this.edgesLayer = this.svg.append('g');
         this.exonLayer = this.svg.append('g');
