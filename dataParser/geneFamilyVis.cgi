@@ -1,9 +1,9 @@
 #!/usr/bin/python3.4
 
+import json
 import cgitb; cgitb.enable()
 import os, string, sys, cgi
 import binascii
-#import binascii, mkdir
 sys.path.insert(0, '/nfshome/agd2q/local/lib/python3.4/site-packages/biopython-1.65-py3.4-linux-x86_64.egg/')
 sys.path.insert(0, '/nfshome/hcarroll/public_html/apps/clustalOmega/bin/')
 from Bio import SeqIO
@@ -173,23 +173,17 @@ def dataProcess(afa):
                 CDSlength = len(CDS)
                 gene.CDS_len.append(CDSlength)
                 if(CDSExonCount == 0):
-                    startFrame = '^'
+                    startFrame = 0
                 else:
                     startFrame = gene.Frames[CDSExonCount-1][2]  # get the ORF from the previous exon
 		    # adjust the coding length to account for the reading frame from the previous exon
-                    if(startFrame == '<'):
+                    if(startFrame == '1'):
                         CDSlength -= 2
-                    elif(startFrame == '>'):
+                    elif(startFrame == '2'):
                         CDSlength -= 1
 			
 		# determine the reading frame
-                if(CDSlength % 3 == 0):
-                    stopFrame = '^'
-                elif(CDSlength % 3 == 1):
-                    stopFrame = '<'
-                else:
-                    stopFrame = '>'
-
+                stopFrame = CDSlength % 3
                 gene.Frames.append([CDSExonCount, startFrame, stopFrame, CDSlength, exonLength])
                 CDSExonCount += 1
 
@@ -333,111 +327,32 @@ def dataProcess(afa):
             exon += 1
             gene.Frames[exon].append(UTR_EXON)
 
+
     # Make Final 2D array
     CombinedLists = []  # 1st index: genes; 2nd index items are: name, CDSExonCount, startFrame, stopFrame, CDSlength, exonLength, then AA alignment indicies
+    jsonOutput = {}
     geneIndex = 0
+
     # each gene is a row in CombinedLists
 	# append each element in gene.Frame into CombinedLists
     for name, gene in gene_dic.items():
-        CombinedLists.append([name])
+        jsonOutput[name] = []
+        colIn = 0
         for col in gene.Frames:
-            CombinedLists[geneIndex].append(col)
+            jsonOutput[name] += [{}] 
+
+            jsonOutput[name][colIn]['start'] = [col[-2]]
+            jsonOutput[name][colIn]['end'] = [col[-1]]
+            jsonOutput[name][colIn]['visualExons'] = [col]
+            jsonOutput[name][colIn]['visualExonCol'] = [geneIndex]
+            jsonOutput[name][colIn]['UTR'] = [col[0]]
+            
+
+            colIn += 1
         geneIndex += 1
 
-    # initialize preFinal to ...
-	# for each list in CombinedLists as frameInfoList
-	#   intialize name1 as first element in list which is name of gene
-	#   append name into preFinal
-	#   for each element in frameInfoList except first element name
-	#       if alignmentIndex_firstExon is UTR_EXON, then append alignmentIndex_firstExon and exonSize
-	#       else if count == 0
-	#           for  in CombinedLists
-		
-    preFinal = []
-    count = 0
-    for frameInfoList in CombinedLists:
-        name1 = frameInfoList[0]
-        preFinal.append([name1])
-        for col in frameInfoList[1:]:
-            rowCount = count + 1
-            rowOn = 0
-            exonNum = col[0]  # coding exon
-            startFrame = col[1]
-            endFrame = col[2]
-            # = col[3]
-            exonSize = col[4] # coding length
-            alignmentIndex_firstExon = col[5]
-            
-            if alignmentIndex_firstExon is UTR_EXON:  # if the first exon is only a UTR
-                preFinal[count].append([alignmentIndex_firstExon, exonSize])
-            elif count == 0:
-                preFinal[count].append([alignmentIndex_firstExon, exonSize])
-                for Nrow in CombinedLists[rowCount:]:
-                    name2 = Nrow[0]
-                    for Ncol in Nrow[1:]:
-                        if startFrame == Ncol[1] and endFrame == Ncol[2]:  # start and end frames match
-                            if (abs(exonSize - Ncol[4]) % 3) is 0: # lengths are the same ORF
-                                if abs(alignmentIndex_firstExon - Ncol[5]) <= 10:
-                                    # each of first alignment positions for each gene are within 10 of each other
-                                    preFinal[count][exonNum+1].append([name2, Ncol[5], Ncol[4], Ncol[0]])
-            else:
-                found = False
-                for row1 in preFinal:
-                    if found is False:
-                        lastName = row1[0]
-                        colOn = 0
-                        for col1 in row1[1:]:
-                            if len(col1) > 2:
-                                count3 = 0
-                                while count3 < len(col1)-2 and found is False:
-                                    if name1 == col1[count3+2][0] and exonNum == col1[count3+2][3]:
-                                        found = True
-                                        preFinal[count].append([-1, [rowOn, colOn, col1[0]]])
-                                    count3 += 1
-                            colOn += 1
-                    rowOn += 1
-
-                if found is False:
-                    preFinal[count].append([alignmentIndex_firstExon, exonSize])
-                    for Nrow in CombinedLists[rowCount:]:
-                        name2 = Nrow[0]
-                        for Ncol in Nrow[1:]:
-                            if startFrame == Ncol[1] and endFrame == Ncol[2]:
-                                if (abs( exonSize - Ncol[4]) % 3) is 0:
-                                    if abs(alignmentIndex_firstExon - Ncol[5]) <= 10:
-                                        preFinal[count][exonNum+1].append([name2, Ncol[5], Ncol[4], Ncol[0]])
-            rowCount += 1
-        count +=1
-
-    #print("preFinal")
-    for row in preFinal:
-        print(len(row))
-        print(row)
-    print()
-
-    ###DEBUGGING SECTION TO SEE THE 2D ARRAY OF EXON LENGTHS
-    i = 1
-    x = 100
-    y = 20
-    temp = '<svg width=300% height=300%>\n'
-
-    #find out how many nonCDS exons there to find how far to shift SVG
-    maxStart = 0
-    for row in preFinal:
-        startNum = 0
-        for col in row[1:]:
-            if col[0] == UTR_EXON:
-                startNum += 1
-        if startNum > maxStart:
-            maxStart = startNum
-    # print('max start is', maxStart)
-    
-    with open("createSVGtemp.html","w") as printSVG:
-        printSVG.write("<html>\n")
-        printSVG.write("<body>\n")
-        printSVG.write("<p>dataParsing is completed, but still upgrade graph design</p>\n</body>\n</html>");
-
-    sys.exit(0)
+    with open('result.json', 'w') as f:
+        json.dump(jsonOutput, f)
 
 def main():
     # os.system("chmod -R 777 files")
