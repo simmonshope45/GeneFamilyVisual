@@ -24,14 +24,21 @@ var p = {
 };
 p.center = p.height / 2 + p.toppadding;
 
-console.log(p.xScale);
-
-
 // graph class definiton
 class Graph {
     constructor() {
+
+
         // setup blank visual with proper dimensions
-        this.svg = d3.select("body").append("svg").attr("width", p.width* 5).attr("height", p.height * 5);
+        this.svg = d3.select("body").append("svg").attr("width", p.width* 5).attr("height", p.height * 5)
+            // .attr("width", "100%")
+            //   .attr("height", "100%")
+
+    //     this.svg.call(d3.behavior.zoom().on("zoom", function () {
+    //     svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+    //   }))
+
+
         this.textLayer = this.svg.append('g');
         this.edgesLayer = this.svg.append('g');
         this.exonLayer = this.svg.append('g');
