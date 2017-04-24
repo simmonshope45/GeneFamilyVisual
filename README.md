@@ -2,6 +2,22 @@
 
 ## Apr 17, 2017
 
+Next meeting at 3:00 PM
+
+### Status reports
+Ethan: Emailed: Close to fully exporting valid JSON records
+Leewood: Worked on a JSON demo
+Micah: 
+
+
+### To-dos
+Ethan: Visual exon columns
+Leewood: Have a python CGI script make a new HTML page and redirect to it
+Micah: Make a ordered list of feature improvements
+
+
+## Apr 17, 2017
+
 ### Status reports
 Ethan: Emailed
 Leewood: Emailed: Looked into sockets and files for transfering JSON string
