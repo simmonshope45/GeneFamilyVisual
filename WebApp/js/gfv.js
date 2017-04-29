@@ -33,7 +33,7 @@ class Graph {
             height = 500 - margin.top - margin.bottom;
 
         var zoom = d3.behavior.zoom()
-                .scaleExtent([1, 10])
+                .scaleExtent([.5, 10])
                 .on("zoom", zoomed);
 
         // setup blank visual with proper dimensions
