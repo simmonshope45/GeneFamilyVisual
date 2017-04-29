@@ -2,7 +2,7 @@
 var p = {
     // get graph deimensions
     height: window.innerHeight,
-    width: window.innerWidth * 2,
+    width: window.innerWidth,
     center: null,
     toppadding: 100,
 
@@ -28,9 +28,19 @@ p.center = p.height / 2 + p.toppadding;
 class Graph {
     constructor() {
 
+        var margin = {top: -5, right: -5, bottom: -5, left: -5},
+            width = 960 - margin.left - margin.right,
+            height = 500 - margin.top - margin.bottom;
+
+        var zoom = d3.behavior.zoom()
+                .scaleExtent([1, 10])
+                .on("zoom", zoomed);
 
         // setup blank visual with proper dimensions
-        this.svg = d3.select("body").append("svg").attr("width", p.width* 5).attr("height", p.height * 5)
+        this.svg = d3.select("body").append("svg").attr("width", p.width).attr("height", p.height)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.right + ")")
+            .call(zoom);
             // .attr("width", "100%")
             //   .attr("height", "100%")
 
@@ -39,10 +49,49 @@ class Graph {
     //   }))
 
 
-        this.textLayer = this.svg.append('g');
-        this.edgesLayer = this.svg.append('g');
-        this.exonLayer = this.svg.append('g');
-        this.topLayer = this.svg.append('g');
+        var rect = this.svg.append("rect")
+            .attr("width", p.width)
+            .attr("height", p.height)
+            .style("fill", "none")
+            .style("pointer-events", "all");
+        this.container = this.svg.append("g");
+        this.container.append("g")
+            .attr("class", "x axis")
+          .selectAll("line")
+            .data(d3.range(0, p.width, 10))
+          .enter().append("line")
+            .attr("x1", function(d) { return d; })
+            .attr("y1", 0)
+            .attr("x2", function(d) { return d; })
+            .attr("y2", p.height);
+
+        this.container.append("g")
+            .attr("class", "y axis")
+          .selectAll("line")
+            .data(d3.range(0, p.height, 10))
+          .enter().append("line")
+            .attr("x1", 0)
+            .attr("y1", function(d) { return d; })
+            .attr("x2", p.width)
+            .attr("y2", function(d) { return d; });
+
+
+        var container = this.container;
+        function zoomed() {
+          container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+        }
+
+
+        this.edgesLayer = this.container.append('g');
+        this.exonLayer = this.container.append('g');
+        this.textLayer = this.container.append('g');
+        this.staticLayer = this.svg.append('g');
+        this.staticTopLayer = this.svg.append('g');
+
+
+        var zoom = d3.behavior.zoom()
+        .scaleExtent([1, 10])
+        .on("zoom", zoomed);
 
 
         // arry of all exons in the graph
@@ -59,7 +108,7 @@ class Graph {
 
     // function to add lables
     addLegend(index, label, color) {
-        var xPos = 300;
+        var xPos = p.width - 200;
         var yStartPos = 250;
         var thickness = 15;
         var spacing = 30;
@@ -69,7 +118,7 @@ class Graph {
         var x = xPos;
         var y = p.height - yStartPos + index * spacing;
 
-        var l = this.svg.append("line");
+        var l = this.staticTopLayer.append("line");
         l.attr("x1", x)
          .attr("x2", x + thickness)
          .attr("y1", y)
@@ -78,7 +127,7 @@ class Graph {
          .attr("pointer-events", "none")
          .attr("stroke", color);
 
-         var t = this.svg.append("text");
+         var t = this.staticTopLayer.append("text");
              t.attr("x", x + textPadding)
               .attr("y", y + thickness / 2.75)
               .style("font-size", thickness)
@@ -86,7 +135,7 @@ class Graph {
               .attr("pointer-events", "none")
               .text(label);
 
-         var h = this.topLayer.append("line");
+         var h = this.staticLayer.append("line");
             h.attr("x1", x)
              .attr("x2", x + thickness * 5)
              .attr("y1", y)
@@ -257,14 +306,16 @@ class Graph {
 
         }
 
+
         // add title
         this.svg.append("text")
-            .attr("x", (1050))
             .attr("y", p.toppadding)
+            .attr("x", p.width / 2)
             .attr("text-anchor", "middle")
             .style("font-size", "24px")
-            .style("text-decoration", "underline")
-            .text("Gene Family Visualization");
+            .style("decoration", "underline")
+            .text("Gene Family Visualization")
+
 
 
                 // .attr("x", )

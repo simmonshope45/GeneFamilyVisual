@@ -2,7 +2,7 @@
 class Exon {
     constructor (graph, column, text = "", length = 1, fullyUTR = false, manX = null, manY = null) {
         // Create a graphic for the exon
-        this.graphic = graph.svg.append("ellipse");
+        this.graphic = graph.exonLayer.append("ellipse");
 
         // pointer to graph
         this.graph = graph;
@@ -104,7 +104,7 @@ class Exon {
 
 
         // add text
-        this.text = this.graph.svg.append("text")
+        this.text = this.graph.textLayer.append("text")
            .attr("x", this.graphic.attr("cx"))
            .attr("y", this.graphic.attr("cy"))
            .attr("font-family","sans-serif")
