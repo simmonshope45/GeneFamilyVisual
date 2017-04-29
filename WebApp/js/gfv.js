@@ -20,6 +20,8 @@ var p = {
     numColumns: 35,
     // xScale: window.innerWidth / 10,
     // yScale: .height / 6,
+    legendY: 250,
+    legendX: 100,
 
 };
 p.center = p.height / 2 + p.toppadding;
@@ -33,7 +35,7 @@ class Graph {
             height = 500 - margin.top - margin.bottom;
 
         var zoom = d3.behavior.zoom()
-                .scaleExtent([.5, 10])
+                .scaleExtent([.5, 2])
                 .on("zoom", zoomed);
 
         // setup blank visual with proper dimensions
@@ -85,6 +87,7 @@ class Graph {
         this.edgesLayer = this.container.append('g');
         this.exonLayer = this.container.append('g');
         this.textLayer = this.container.append('g');
+        this.staticBackLayer = this.svg.append('g');
         this.staticLayer = this.svg.append('g');
         this.staticTopLayer = this.svg.append('g');
 
@@ -108,8 +111,8 @@ class Graph {
 
     // function to add lables
     addLegend(index, label, color) {
-        var xPos = p.width - 200;
-        var yStartPos = 250;
+        var xPos = p.width - p.legendX;
+        var yStartPos = p.legendY;
         var thickness = 15;
         var spacing = 30;
         var textPadding = 20;
@@ -289,6 +292,7 @@ class Graph {
     }
 
     // element positioning cleanup function
+    // also ads static elements
     cleanGraph() {
         // if the exon only has one outgoing edge and no incoming edges
         // and the exon it is attached to only has one incoming edge,
@@ -315,10 +319,39 @@ class Graph {
             .style("font-size", "24px")
             .style("decoration", "underline")
             .text("Gene Family Visualization")
+            .style("font-family", "'Roboto', sans-serif")
 
 
 
-                // .attr("x", )
+        var boxPadding = 10;
+        // add box around legends
+        this.staticBackLayer.append("rect")
+            .attr("x", p.width - p.legendX - boxPadding)
+            .attr("y", p.height - p.legendY)
+            .attr("ry", 1)
+            .attr("rx", 1)
+            .attr("height", p.legendY)
+            .attr("width", p.legendX + boxPadding)
+            .attr("fill", "white")
+            .attr("stroke", "black")
+
+
+        // add title
+        this.svg.append("text")
+            .attr("y", p.height - 30)
+            .attr("x", p.width / 2)
+            .attr("text-anchor", "middle")
+            .style("font-size", "12px")
+            .text("Genetic dataset provided by Dr. Seipelt-Thiemann. Rendered autonomously using allignment and visualization algorithm.")
+            .style("font-family", "'Roboto', sans-serif")
+        this.svg.append("text")
+            .attr("y", p.height - 15)
+            .attr("x", p.width / 2)
+            .attr("text-anchor", "middle")
+            .style("font-size", "12px")
+            .text("Pan around by clicking and dragging. Zoom by scrooling in and out. Hover over the name of a gene to the right to highlight its exons.")
+            .style("font-family", "'Roboto', sans-serif")
+
     }
 
 

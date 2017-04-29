@@ -74,7 +74,7 @@ class Exon {
                    .attr("rx", this.radiusY)
                    .attr("ry", this.radius)
                    .style("stroke-width", 2)
-                   .style("stroke", "blue")
+                   .style("stroke", "black")
                    .style("fill", this.fill);
         }
 
