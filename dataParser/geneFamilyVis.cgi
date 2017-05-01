@@ -1,6 +1,5 @@
 #!/usr/bin/python3.4
 
-import cgitb; cgitb.enable()
 import os, string, sys, cgi
 import binascii
 #import binascii, mkdir
@@ -9,15 +8,20 @@ sys.path.insert(0, '/nfshome/hcarroll/public_html/apps/clustalOmega/bin/')
 from Bio import SeqIO
 from Bio.SeqRecord import SeqRecord
 from Bio.Align.Applications import ClustalOmegaCommandline
-import itertools
-import colorsys
 import argparse #import argaparse library for addArgv, --afa
-sys.stderr = sys.stdout
 
 UTR_EXON = -2
 
 form = cgi.FieldStorage()
 path = ""
+
+
+#this follow line print out the DEBUGGING for run cgi
+import cgitb; cgitb.enable()
+sys.stderr = sys.stdout
+print("Content-Type: text/html")
+print()
+#-------------------------------------------------
 
 #creating an object to hold all the information for each gene
 class Gene(object):
@@ -88,8 +92,8 @@ def dna_to_prot(strand):
 # initialize newDir as a random string, such as 424e069cb11ecc4f5712c3863c9cfba1
 # initialize a global path to use late in Main()
 # store a path of newDir into path string
-# if newDir is not exist in files dirctory, create one and set permission to 0o777
-
+# NOTE: This 0o777 is used for DEBUGGING purpose only, recommend use 0o755
+# Because the server user permission is wwww-data, if using 0o755 is hard to remove test files
 def mkDir():
     if not os.path.exists("files"):
         os.makedirs("files")
@@ -103,11 +107,41 @@ def mkDir():
         os.makedirs(path)
         #os.chmod(path, 0o755)
         os.chmod(path, 0o777) # DEBUGGING
-	
+
+# This function will make a json file and store in the files
+# if newDir is not exist in files dirctory, create one and set permission to 0o777
+# NOTE: This 0o777 is used for DEBUGGING purpose only, recommend use 0o755
+# Because the server user permission is wwww-data, if using 0o755 is hard to remove test files
+def mkJson(dictJson):
+    newJson = path +  "/jsonFile.json"
+    open(newJson, 'w').write(json.dumps(dictJson))
+    #os.chmod(newPage, 0o755)
+    os.chmod(newJson, 0o777)# DEBUGGING
+
+# This function will make a html file to display result of code
+# It is not completed yet, depend on the javascript
+# NOTE: This 0o777 is used for DEBUGGING purpose only, recommend use 0o755
+# Because the server user permission is wwww-data, if using 0o755 is hard to remove test files
+def mkPage():
+    printPage = ("""<!DOCTYPE html>
+<html>
+<head>
+    <title>Result Upload File</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script type="text/javascript" src="../openJson.js"></script>
+</head>
+<body>
+    <p id="myJson">Thank you for using this upload. Unforunately, the back end is not finish yet...</p>
+</body>
+</html>"""%("jsonFile.json"))
+    newPage = path + "/result.html" 
+    open(newPage, 'w').write(printPage)
+    #os.chmod(newPage, 0o755)
+    os.chmod(newPage, 0o777)# DEBUGGING
+
 # add argument for dataPrcoess for checking if there is afa in command line
 # afa can be string of aligned file
 # or False if user do not provide aligned file
-
 def dataProcess(afa): 
     # get the files in the directory
     listing = os.listdir(path)
@@ -409,11 +443,7 @@ def dataProcess(afa):
             rowCount += 1
         count +=1
 
-    #print("preFinal")
-    for row in preFinal:
-        print(len(row))
-        print(row)
-    print()
+
 
     ###DEBUGGING SECTION TO SEE THE 2D ARRAY OF EXON LENGTHS
     i = 1
@@ -437,19 +467,18 @@ def dataProcess(afa):
         printSVG.write("<body>\n")
         printSVG.write("<p>dataParsing is completed, but still upgrade graph design</p>\n</body>\n</html>");
 
-    sys.exit(0)
 
 def main():
     # os.system("chmod -R 777 files")
     # os.system("echo 'DEBUGGING:' > /tmp/hcarroll.tmp; chmod 777 /tmp/hcarroll.tmp")
 
     
-    message = ""
+    message = "" #idk what it is for?
 
     # make a new unique directory in files directory
     # as well include initialize path a global which store path new directory	
-	
     mkDir()
+
     # definies what arguments are setup in program
     # initialize useArgv as boolean to check if user use command-line or CGI form
     # initialize parser as Argument Parser to what are argument setup
@@ -467,15 +496,7 @@ def main():
     # so check if user provide fasta file 
     # if not, print usage for user and terminate program
 
-    if not args.files:
-        print("usage: dataParsing.py [-h]/[--help]")
-        print("usage: dataParsing.py [list of fasta file]")
-        print("usage: dataParsing.py [-a]/[--afa] [aligned file] [list of fasta file]")
-        sys.exit(0)
 
-	#
-    # get input file(s) from either the CGI form or from the command-line
-    #
 
     # if called from a CGI form
     # initialize fileItems as list of filename through HTML Form
@@ -509,6 +530,14 @@ def main():
 	
     else:
         # get file(s) from the command-line
+    	#
+        # get input file(s) from either the CGI form or from the command-line
+        #
+        if not args.files:
+            print("usage: dataParsing.py [-h]/[--help]")
+            print("usage: dataParsing.py [list of fasta file]")
+            print("usage: dataParsing.py [-a]/[--afa] [aligned file] [list of fasta file]")
+            sys.exit(0)
         useArgv = True
         fileItems = args.files          #if using the argument line
         for fileItem in fileItems:
@@ -519,14 +548,6 @@ def main():
                 # 'str' does not support the buffer interface
                 open(path + '/' + fn, 'w').write(op)
             except:
-		# display error message
-                print("""Content-Type: text/html\n\n
-                      <html>
-                      <body>
-                         <p>%s</p>
-                      </body>
-                      </html>
-                      """ %(path+'/'+fn))
                 sys.exit()
     
     # initialize afa as filename of aligned file
@@ -548,12 +569,10 @@ def main():
     </body>
 </html>
 """
-
+    
     # if called from CGI form use redirectStr
     # else print meassge of complete program
-
     if(not useArgv):
-        os.system("echo 'DEBUGGING: redirectStr: " + redirectStr + "' > /tmp/hcarroll.tmp; chmod 777 /tmp/hcarroll.tmp")
         print(redirectStr)
     else:
         print("Successfully completed")

@@ -1,0 +1,29 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" media="all" href="styles.css" />
+</head>
+
+<body>
+    <form id="upload" enctype="multipart/form-data" action="geneFamilyVis.cgi" method="post">
+        <fieldset>
+            <legend>Upload Exon Files</legend>
+            <input type="hidden" id="MAX_FILE_SIZE" name="MAX_FILE_SIZE" vaule="300000" />
+            <div>
+                <p>Files to upload: <input type="file" name="filename[]" multiple="multiple" /></p>
+                <div id="filedrag">or drop files here</div>
+            </div>
+            <p><input type="submit" value="Upload" /></p>
+        </fieldset>
+    </form>
+
+    <hr>
+
+    <form action="createSVG.html" method="post">
+        <button>Small simple example</button>
+    </form>
+
+    <form action="createSVGAll.html" method="post">
+        <button>Large simple example</button>
+    </form>
+</body>
+</html>
