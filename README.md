@@ -18,7 +18,7 @@
 ### Deployment:
 1. Web server set-up  
    A. CSU, or  
-   B. Independent site  
+   B. Independent site - **Leewood**  
 2. Web documentation - **Leewood**  
   
 ### Writing:   
