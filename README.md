@@ -3,17 +3,17 @@
 ## Sep 14, 2017 - Google Hangout Notes
 
 ### Development:
-1. Backend code (pre-JSON) - Ethan
-   A. Complete development
-   B. Create test data sets
-   C. Test
-   D. Refine (return to 1.C.)
-2. Visualization (post-JSON)
-   A. Complete development
-      i. Save as image option
-   B. Create test cases
-   C. Test
-   D. Refine (return to 2.C.)
+1. Backend code (pre-JSON) - Ethan 
+   A. Complete development 
+   B. Create test data sets 
+   C. Test 
+   D. Refine (return to 1.C.) 
+2. Visualization (post-JSON) 
+   A. Complete development 
+      i. Save as image option 
+   B. Create test cases 
+   C. Test 
+   D. Refine (return to 2.C.) 
 
 ### Deployment:
 1. Web server set-up
