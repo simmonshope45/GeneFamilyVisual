@@ -1,5 +1,46 @@
 # Meeting Notes
 
+## Sep 14, 2017 - Google Hangout Notes
+
+### Development:
+1. Backend code (pre-JSON) - Ethan
+   A. Complete development
+   B. Create test data sets
+   C. Test
+   D. Refine (return to 1.C.)
+2. Visualization (post-JSON)
+   A. Complete development
+      i. Save as image option
+   B. Create test cases
+   C. Test
+   D. Refine (return to 2.C.)
+
+### Deployment:
+1. Web server set-up
+   A. CSU, or
+   B. Independent site
+2. Web documentation - Leewood
+
+### Writing: 
+1. Outline paper - Dr. Carroll
+   A. Coordinate with Dr. Seipelt-Thiemann - Dr. Carroll
+2. Share outline with co-authors
+3. Revise outline
+4. Write draft (return to 2.)
+
+### Manuscript submission - Dr. Carroll
+
+
+### To-dos before next meeting:
+Dr. Carroll
++ Outline paper (with Dr. Seipelt-Thiemann)
++ Send out Doodle poll for bi-weekly meeting
++ Keep waiting for response about CSU server to handle python CGI script
+
+Ethan:
++ Test cases
+
+
 ## Apr 17, 2017
 
 Next meeting at 3:00 PM
