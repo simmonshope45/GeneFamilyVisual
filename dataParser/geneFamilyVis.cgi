@@ -1,13 +1,11 @@
-#!/usr/bin/python3.4
+#!/usr/bin/python3
 
 import os, string, sys, cgi
 import binascii
 #import binascii, mkdir
-sys.path.insert(0, '/nfshome/agd2q/local/lib/python3.4/site-packages/biopython-1.65-py3.4-linux-x86_64.egg/')
-sys.path.insert(0, '/nfshome/hcarroll/public_html/apps/clustalOmega/bin/')
-from Bio import SeqIO
+from Bio import SeqIO  # requires BioPython
 from Bio.SeqRecord import SeqRecord
-from Bio.Align.Applications import ClustalOmegaCommandline
+from Bio.Align.Applications import ClustalOmegaCommandline   # requires Clustal Omega (with the executable as clustalo)
 import argparse #import argaparse library for addArgv, --afa
 
 UTR_EXON = -2
@@ -22,6 +20,8 @@ sys.stderr = sys.stdout
 print("Content-Type: text/html")
 print()
 #-------------------------------------------------
+
+CLUSTAL_INPUT_BASE_FILENAME = "clustalInput.fa"
 
 #creating an object to hold all the information for each gene
 class Gene(object):
@@ -81,6 +81,7 @@ dnaToProtD = {
 # initialize aminos as a list of amino acids from each slice 3 letter DNA strand
 # initialize protein as a string from join aminos list
 # return protein
+# Note: Assumes that all chracters are nucleotides (AGCT) and not gaps
 
 def dna_to_prot(strand):
     aminos = [ dnaToProtD[strand[i:i+3] ] for i in range(0, len(strand), 3) ]
@@ -141,8 +142,8 @@ def mkPage():
 
 # add argument for dataPrcoess for checking if there is afa in command line
 # afa can be string of aligned file
-# or False if user do not provide aligned file
-def dataProcess(afa): 
+# or False if user did not provide aligned file
+def dataProcess( afa ): 
     # get the files in the directory
     listing = os.listdir(path)
 
@@ -173,6 +174,10 @@ def dataProcess(afa):
 	
     for infile in listing:
 
+        # if infile[-3] != ".fa":
+        #     # not a fasta file extension (for command-line use)
+        #     continue
+        
         # open the file
         with open(os.path.join(path, infile), 'r') as genes:
             # initalize the counter to zero for each gene/file
@@ -245,7 +250,7 @@ def dataProcess(afa):
 	    # FUTURE: open the file once, append to it in this loop, then close it once
             #create one giant fasta file with all AA sequences 
             #to pass to clustal omega
-            with open(path + "/ALL.txt", "a") as ALL_AA:
+            with open(path + "/" + CLUSTAL_INPUT_BASE_FILENAME, "a") as ALL_AA:
                 ALL_AA.write('>' + name + '\n')
                 ALL_AA.write(gene.AA + '\n')
                 ALL_AA.close()
@@ -264,7 +269,7 @@ def dataProcess(afa):
         gene_dic[name] = gene
 
     # call clustal omega
-    in_file = path + "/ALL.txt"
+    in_file = path + "/" + CLUSTAL_INPUT_BASE_FILENAME
 
     # if there is --afa on the command line, use the MSA from user
     # else use the aligned from the path in file folder
@@ -272,23 +277,7 @@ def dataProcess(afa):
     out_file = ""
     if afa:
         out_file = "./" + afa
-    else:
-        out_file= path + "/aligned.fasta"
-        clustalo = ClustalOmegaCommandline(infile=in_file, outfile=out_file, auto=True, cmd="/nfshome/hcarroll/public_html/apps/clustalOmega/bin/clustalo")
-        clustalo()
-
-    #
-    # read in the aligned sequences and store them in their respective objects
-    #
-    with open(out_file, 'r') as clustal:
-        for line in clustal:
-            line = line.rstrip()
-            if(line[0] is '>'): # and count is 0):
-                name = line[1:] # remove the > character at the beginning of the line
-            else:
-                gene_dic[name].Aligned_str += line
-
-    if afa:
+        
         # verify that the user-supplied alignment file matches exactly with the translated versions of the user-supplied input files
         # for each gene
         #     compare AA with Aligned_str (except for "-"s) (by making a temporary copy of Aligned_str that has all "-"s replaced with "")
@@ -299,6 +288,21 @@ def dataProcess(afa):
                 print( "Translated:", gene.AA)
                 print( "Alignment: ", gene.Aligned_str.replace("-",""), "(any gaps were removed for this error message)")
                 sys.exit(1)    
+    else:
+        out_file= path + "/aligned.fasta"
+        clustalo = ClustalOmegaCommandline( infile=in_file, outfile=out_file, auto=True, cmd="clustalo" )
+        clustalo()
+    
+        #
+        # read in the aligned sequences and store them in their respective objects
+        #
+        with open(out_file, 'r') as clustal:
+            for line in clustal:
+                line = line.rstrip()
+                if(line[0] is '>'): # and count is 0):
+                    name = line[1:] # remove the > character at the beginning of the line
+                else:
+                    gene_dic[name].Aligned_str += line
 
     # loop through each gene in the gene_dictionary
     #   intialize frame_len to get integer of each gene.CDS_len divide 3
@@ -470,7 +474,7 @@ def dataProcess(afa):
 
 def main():
     # os.system("chmod -R 777 files")
-    # os.system("echo 'DEBUGGING:' > /tmp/hcarroll.tmp; chmod 777 /tmp/hcarroll.tmp")
+    # os.system("echo 'DEBUGGING:' > /tmp/gfv.tmp; chmod 777 /tmp/gvf.tmp")
 
     
     message = "" #idk what it is for?
@@ -535,8 +539,8 @@ def main():
         #
         if not args.files:
             print("usage: dataParsing.py [-h]/[--help]")
-            print("usage: dataParsing.py [list of fasta file]")
-            print("usage: dataParsing.py [-a]/[--afa] [aligned file] [list of fasta file]")
+            print("usage: dataParsing.py [UCSC Genome Browswer CDS fasta files]")
+            print("usage: dataParsing.py [-a]/[--afa] [aligned file] [UCSC Genome Browswer CDS fasta files]")
             sys.exit(0)
         useArgv = True
         fileItems = args.files          #if using the argument line

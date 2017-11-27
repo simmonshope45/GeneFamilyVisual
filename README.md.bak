@@ -14,12 +14,12 @@ List of visual exons
 List of gene info
 + For each gene:
   + Name
-  + Visual exon indices
+  + Visual exon indicies
 
 Micah's going to change his hard-coded example to use a JSON record.  (**Micah, can you have that done before Monday, or at least by the end of November 30th?**).
 
 ### Web server update
-The prospects of using a server at CSU have not improved.  Leewood researched the pricing for web hosting companies.  We're looking for a Linux machine.  Additionally, we need to choose a domain name and register it.  (**Leewood, could you research the pricing and how to register a domain name before the end of the month?**)  (**All, who's got a great URL idea (that's not already taken)?**)
+The prospects of using a server at CSU have not improved.  Leewood researched the pricing for web hosting companies.  We're looking for a Linux machine.  Additionally, we need to choose a domain name and register it.  (**Leewood, could you research the pricing and how to register a domain name before the end of the month?**)  (**All, who's got a great URL idea (that's not alread taken)?**)
 
 
 ### Manuscript Outline
@@ -133,7 +133,7 @@ Next meeting at 3:00 PM
 
 ### Status reports  
 **Ethan**: Emailed  
-**Leewood**: Emailed: Looked into sockets and files for transferring JSON string  
+**Leewood**: Emailed: Looked into sockets and files for transfering JSON string  
 **Micah**: Worked on visualization  
 
 
@@ -182,7 +182,7 @@ Next meeting at 3:00 PM
 
 ## Mar 20, 2017  
 
-JSON record format:  
+json record format:  
 ---------------------------------  
 A dictionary, with  
 key0: "geneFamilyInfo", which is a dictionary, with gene names as keys, and a list of exon properties (dictionaries) as the values  
@@ -198,7 +198,7 @@ key1: "visualExons", which is a list with each element having the following data
 
 
 ## Mar 13, 2017  
-JSON record format:  
+json record format:  
 ---------------------------------  
 dictionary, with gene names as keys, and a list of exon properties (dictionaries) as the values  
 The exon properties dictionary with the following keys:  
@@ -227,7 +227,7 @@ Dr. C:
 ### To-Dos:  
 **Arol**:      
 **Micah**:	 Test Cases for visual exons spanning multiple columns  
-**Ethan**:   Update JSON example;  Refine the flowchart; contact Dr. C; work on implementing the flowchart  
+**Ethan**:   Update json example;  Refine the flowchart; contact Dr. C; work on implemmenting the flowchart  
 **Leewood**:   
 
 
