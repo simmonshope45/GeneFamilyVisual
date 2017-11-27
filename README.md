@@ -33,19 +33,19 @@ Our goal is to submit our manuscript by the end of December.  To accomplish this
 Development:
 1. JSON record format - Micah [November 30, 2017]
 2. Create test data sets - Dr. Carroll [December 7, 2017]
-	A. Unrelated genes
-	B. Add unrelated genes to a gene family
+	+ Unrelated genes
+	+ Add unrelated genes to a gene family
 3. Backend code (pre-JSON) - Ethan [ ]
 	A. Complete development 
 	B. Test
 	C. Refine (return to 1.B.)
 4. Visualization (post-JSON) - Micah [ ]
-	A. Complete development
-		i. Save as image option
-			a. JPEG (and PNG)
-			b. SVG
-	B. Test
-	C. Refine (return to 2.B.)
+	+ Complete development
+		+ Save as image option
+			+ JPEG (and PNG)
+			+ SVG
+	+ Test
+	+ Refine (return to 2.B.)
 
 Deployment:
 1. Domain name registration
