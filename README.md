@@ -16,7 +16,7 @@ List of gene info
   + Name
   + Visual exon indices
 
-Micah's going to change his hard-coded example to use a JSON record.  (**Micah, can you have that done before Monday, or at least by the end of November 30th?**).
+Micah's going to change his hard-coded example to use a JSON record.  (**Micah, can you have that done by the end of November 30th?**).
 
 ### Web server update
 The prospects of using a server at CSU have not improved.  Leewood researched the pricing for web hosting companies.  We're looking for a Linux machine.  Additionally, we need to choose a domain name and register it.  (**Leewood, could you research the pricing and how to register a domain name before the end of the month?**)  (**All, who's got a great URL idea (that's not already taken)?**)
