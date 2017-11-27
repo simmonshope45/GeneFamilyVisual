@@ -36,35 +36,35 @@ Development:
 	+ Unrelated genes
 	+ Add unrelated genes to a gene family
 3. Backend code (pre-JSON) - Ethan [ ]
-	A. Complete development 
-	B. Test
-	C. Refine (return to 1.B.)
+	+ Complete development 
+	+ Test
+	+ Refine (return to Test)
 4. Visualization (post-JSON) - Micah [ ]
 	+ Complete development
 		+ Save as image option
 			+ JPEG (and PNG)
 			+ SVG
 	+ Test
-	+ Refine (return to 2.B.)
+	+ Refine (return to Test)
 
 Deployment:
 1. Domain name registration
-	i. Research pricing & how to - Leewood? [ ]
-	ii. Decide on a name - All
-	iii. Register - Dr. Carroll
+	+ Research pricing & how to - Leewood? [ ]
+	+ Decide on a name - All
+	+ Register - Dr. Carroll
 2. Web server set-up - Dr. Carroll
 3. Web documentation (user's manual) - ?
 
 Writing:
 1. Venue selection - Dr. Carroll [December 1, 2017]
 2. Write draft
-	A. Methods
-		i. Backend (Ethan) [ ]
-		ii. Visualization (Micah) [ ]
-	B. Results (Ethan & Micah) [ ]
-	C. Conclusion - Drs. Carroll & Seipelt-Thiemann [waiting on Methods & Results milestones]
-	D. Introduction - Dr. Seipelt-Thiemann [waiting on Conclusion milestones]
-	E. Abstract
+	+ Methods
+		+ Backend (Ethan) [ ]
+		+ Visualization (Micah) [ ]
+	+ Results (Ethan & Micah) [ ]
+	+ Conclusion - Drs. Carroll & Seipelt-Thiemann [waiting on Methods & Results milestones]
+	+ Introduction - Dr. Seipelt-Thiemann [waiting on Conclusion milestones]
+	+ Abstract
 3. Share with co-authors - Dr. Carroll
 4. Revise draft
 5. Return to 2.
