@@ -33,38 +33,38 @@ Our goal is to submit our manuscript by the end of December.  To accomplish this
 Development:
 1. JSON record format - Micah [November 30, 2017]
 2. Create test data sets - Dr. Carroll [December 7, 2017]
-   A. Unrelated genes
-   B. Add unrelated genes to a gene family
+	A. Unrelated genes
+	B. Add unrelated genes to a gene family
 3. Backend code (pre-JSON) - Ethan [ ]
-   A. Complete development 
-   B. Test
-   C. Refine (return to 1.B.)
+	A. Complete development 
+	B. Test
+	C. Refine (return to 1.B.)
 4. Visualization (post-JSON) - Micah [ ]
-   A. Complete development
-      i. Save as image option
-         a. JPEG (and PNG)
-         b. SVG
-   B. Test
-   C. Refine (return to 2.B.)
+	A. Complete development
+		i. Save as image option
+			a. JPEG (and PNG)
+			b. SVG
+	B. Test
+	C. Refine (return to 2.B.)
 
 Deployment:
 1. Domain name registration
-   i. Research pricing & how to - Leewood? [ ]
-   ii. Decide on a name - All
-   iii. Register - Dr. Carroll
+	i. Research pricing & how to - Leewood? [ ]
+	ii. Decide on a name - All
+	iii. Register - Dr. Carroll
 2. Web server set-up - Dr. Carroll
 3. Web documentation (user's manual) - ?
 
 Writing:
 1. Venue selection - Dr. Carroll [December 1, 2017]
 2. Write draft
-   A. Methods
-      i. Backend (Ethan) [ ]
-      ii. Visualization (Micah) [ ]
-   B. Results (Ethan & Micah) [ ]
-   C. Conclusion - Drs. Carroll & Seipelt-Thiemann [waiting on Methods & Results milestones]
-   D. Introduction - Dr. Seipelt-Thiemann [waiting on Conclusion milestones]
-   E. Abstract
+	A. Methods
+		i. Backend (Ethan) [ ]
+		ii. Visualization (Micah) [ ]
+	B. Results (Ethan & Micah) [ ]
+	C. Conclusion - Drs. Carroll & Seipelt-Thiemann [waiting on Methods & Results milestones]
+	D. Introduction - Dr. Seipelt-Thiemann [waiting on Conclusion milestones]
+	E. Abstract
 3. Share with co-authors - Dr. Carroll
 4. Revise draft
 5. Return to 2.
@@ -76,26 +76,26 @@ Manuscript submission - Dr. Carroll [December 30, 2017]
 
 ### Development:
 1. Backend code (pre-JSON) - **Ethan**  
-   A. Complete development  
-   B. Create test data sets  
-   C. Test  
-   D. Refine (return to 1.C.)  
+	A. Complete development  
+	B. Create test data sets  
+	C. Test  
+	D. Refine (return to 1.C.)  
 2. Visualization (post-JSON)  
-   A. Complete development  
-      i. Save as image option  
-   B. Create test cases  
-   C. Test  
-   D. Refine (return to 2.C.)  
+	A. Complete development  
+		i. Save as image option  
+	B. Create test cases  
+	C. Test  
+	D. Refine (return to 2.C.)  
 
 ### Deployment:
 1. Web server set-up  
-   A. CSU, or  
-   B. Independent site - **Leewood**  
+	A. CSU, or  
+	B. Independent site - **Leewood**  
 2. Web documentation - **Leewood**  
 
 ### Writing:   
 1. Outline paper - **Dr. Carroll**  
-   A. Coordinate with Dr. Seipelt-Thiemann - **Dr. Carroll**  
+	A. Coordinate with Dr. Seipelt-Thiemann - **Dr. Carroll**  
 2. Share outline with co-authors  
 3. Revise outline  
 4. Write draft (return to 2.)  
@@ -191,9 +191,9 @@ The exon properties dictionary with the following keys:
 + end MSA alignment position  
 + visual exon index  
 key1: "visualExons", which is a list with each element having the following data:  
-    + (ending) reading frame [0-2]  
-    + Visual exon columns (list of 2 elements, start and end [so most visual exons have the same start and end values])  
-    + UTR type [0-2] (0: Not a UTR, 1: partial UTR, 2: full UTR)  
+	 + (ending) reading frame [0-2]  
+	 + Visual exon columns (list of 2 elements, start and end [so most visual exons have the same start and end values])  
+	 + UTR type [0-2] (0: Not a UTR, 1: partial UTR, 2: full UTR)  
 
 
 
