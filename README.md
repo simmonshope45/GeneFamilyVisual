@@ -56,7 +56,7 @@ Deployment:
 3. Web documentation (user's manual) - ?
 
 Writing:
-1. Venue selection - Dr. Carroll [December 1, 2017]
+~~1. Venue selection - Dr. Carroll [December 1, 2017] <Completed December 1, 2107>~~
 2. Write draft
 	+ Methods
 		+ Backend (Ethan) [ ]
