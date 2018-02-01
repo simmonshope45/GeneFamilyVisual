@@ -1,3 +1,7 @@
+/* Author: Micah Hauge
+ * Purpose: crete sample json to be visualized
+*/
+
 // create base object to be JSONified
 var gfv_json = { exon_list: null, family_list: null};
 
@@ -64,7 +68,8 @@ gfv_json.family_list = [
   { exons_in_family: [1, 10, 13, 15, 16, 17, 18, 19, 21, 22, 24, 25, 27, 29, 31, 33, 34, 35, 42], color: colors[6], family_name: "ERAP2"},
 ]
 
-var gfv_json_string = JSON.stringify(gfv_json, null, '\t');
+// stringify the javascript object
+var gfv_json_string = JSON.stringify(gfv_json);
 console.log(gfv_json_string)
 
 // function to generate random colors
