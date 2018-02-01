@@ -70,7 +70,6 @@ gfv_json.family_list = [
 
 // stringify the javascript object
 var gfv_json_string = JSON.stringify(gfv_json);
-console.log(gfv_json_string)
 
 // function to generate random colors
 function getRandomColor() {
