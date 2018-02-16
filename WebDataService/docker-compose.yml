@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    ports:
+      - 5432:5432
+    # volumes:
+    #   - ./data/postgres:/var/lib/postgresql/data
+
+  project_api:
+    build: ./data_api/
+    volumes:
+      - ./data_api:/usr/src/app
+    ports:
+      - 5001:5001
+    depends_on:
+      - db

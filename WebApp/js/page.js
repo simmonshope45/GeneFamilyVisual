@@ -73,10 +73,10 @@ function download_svg_helper(svg, fileName) {
   copyStylesInline(copy, svg);
   var canvas = document.createElement("canvas");
   var bbox = svg.getBBox();
-  canvas.width = bbox.width;
-  canvas.height = bbox.height;
+  canvas.width = p.width;
+  canvas.height = p.height;
   var ctx = canvas.getContext("2d");
-  ctx.clearRect(0, 0, bbox.width, bbox.height);
+  ctx.clearRect(0, 0, p.width, p.height);
   var data = (new XMLSerializer()).serializeToString(copy);
   var DOMURL = window.URL || window.webkitURL || window;
   var img = new Image();
