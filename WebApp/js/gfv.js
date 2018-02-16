@@ -1,10 +1,11 @@
 // global properties object
 var p = {
     // get graph deimensions
-    height: window.innerHeight,
+    height: window.innerHeight - 50,
     width: window.innerWidth,
     center: null,
     toppadding: 100,
+
 
     // space between exons
     padding: 150,
@@ -22,8 +23,8 @@ var p = {
     // yScale: .height / 6,
     legendY: 250,
     legendX: 100,
-
 };
+
 p.center = p.height / 2 + p.toppadding;
 
 // graph class definiton
@@ -39,18 +40,10 @@ class Graph {
                 .on("zoom", zoomed);
 
         // setup blank visual with proper dimensions
-        this.svg = d3.select("body").append("svg").attr("width", p.width).attr("height", p.height)
+        this.svg = d3.select("body").append("svg").attr("width", p.width).attr("height", p.height).attr("id", "graph")
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.right + ")")
             .call(zoom);
-            // .attr("width", "100%")
-            //   .attr("height", "100%")
-
-    //     this.svg.call(d3.behavior.zoom().on("zoom", function () {
-    //     svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
-    //   }))
-
-
         var rect = this.svg.append("rect")
             .attr("width", p.width)
             .attr("height", p.height)
@@ -66,7 +59,6 @@ class Graph {
             .attr("y1", 0)
             .attr("x2", function(d) { return d; })
             .attr("y2", p.height);
-
         this.container.append("g")
             .attr("class", "y axis")
           .selectAll("line")

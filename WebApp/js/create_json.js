@@ -8,7 +8,7 @@ var gfv_json = { exon_list: null, family_list: null};
 // create exon list and add it to the base object
 // FORMAT: {COLUMN, TEXT, LENGTH, FULLY_UTR, [manual_x_adjustment], [manual_y_adjustment]}
 gfv_json.exon_list = [
-  { column: 1, text: "69", length: 1, fullyUTR: 1 },
+  { column: 1, text: "69", length: 1,  fullyUTR: 1 },
   { column: 1, text: "533", length: 1, fullyUTR: 1 },
   { column: 1, text: "330", length: 1, fullyUTR: 1 },
   { column: 1, text: "588", length: 1, fullyUTR: 1 },
@@ -69,7 +69,7 @@ gfv_json.family_list = [
 ]
 
 // stringify the javascript object
-var gfv_json_string = JSON.stringify(gfv_json);
+var gfv_json_string = JSON.stringify(gfv_json, null);
 
 // function to generate random colors
 function getRandomColor() {
