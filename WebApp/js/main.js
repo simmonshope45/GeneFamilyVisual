@@ -5,6 +5,19 @@ var visual = new Graph();
 var graph_data = JSON.parse(gfv_json_string);
 console.log(graph_data);
 
+// if the input does not include colors
+if(!graph_data.family_list[0].color) {
+  // get the number of families supplied
+  var family_count = graph_data.family_list.length;
+  console.log(family_count)
+  // create a unique color for each family
+  var colors = create_random_colors(family_count);
+  // add colors to each family
+  for (var i = 0; i < family_count; i++) {
+      graph_data.family_list[i].color = colors[i];
+  }
+}
+
 // add all exons in graph_data to the graph
 var exon;
 for (var i = 0; i < graph_data.exon_list.length; i++) {

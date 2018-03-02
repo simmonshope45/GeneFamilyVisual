@@ -54,26 +54,32 @@ gfv_json.exon_list = [
 ];
 
 // create a set of colors for family identification
-colors = randomColors(8);
+colors = create_random_colors(8);
 
 // create family list
 // FORMAT: { EXON_ARRAY, COLOR, FAMILY_NAME }
+// gfv_json.family_list = [
+//   { exons_in_family: [4, 11, 16, 17, 18, 19, 20, 23, 24, 25, 26, 28, 29, 30, 32, 33, 34, 35, 36], color: colors[0], family_name: "APQ"},
+//   { exons_in_family: [0, 5, 12, 14, 16, 17, 18, 19, 20, 23, 24, 25, 26, 28, 29, 30, 32, 33, 34, 35, 37], color: colors[1], family_name: "ANPEP"},
+//   { exons_in_family: [6, 12, 14, 16, 17, 18, 19, 20, 23, 24, 25, 26, 28, 29, 30, 32, 33, 34, 35, 38], color: colors[2], family_name: "TRHDE"},
+//   { exons_in_family: [7, 13, 15, 16, 17, 18, 19, 20, 23, 24, 25, 26, 28, 29, 30, 32, 33, 34, 35, 39], color: colors[3], family_name: "ENPEP"},
+//   { exons_in_family: [3, 8, 13, 15, 16, 17, 18, 19, 21, 24, 25, 27, 29, 31, 33, 34, 35, 40], color: colors[4], family_name: "LNPEP"},
+//   { exons_in_family: [2, 9, 13, 15, 16, 17, 18, 19, 21, 22, 24, 25, 27, 29, 31, 33, 34, 35, 41], color: colors[5], family_name: "ERAP1"},
+//   { exons_in_family: [1, 10, 13, 15, 16, 17, 18, 19, 21, 22, 24, 25, 27, 29, 31, 33, 34, 35, 42], color: colors[6], family_name: "ERAP2"},
+// ]
+
+// NO COLORS:
+// create family list
+// FORMAT: { EXON_ARRAY, COLOR, FAMILY_NAME }
 gfv_json.family_list = [
-  { exons_in_family: [4, 11, 16, 17, 18, 19, 20, 23, 24, 25, 26, 28, 29, 30, 32, 33, 34, 35, 36], color: colors[0], family_name: "APQ"},
-  { exons_in_family: [0, 5, 12, 14, 16, 17, 18, 19, 20, 23, 24, 25, 26, 28, 29, 30, 32, 33, 34, 35, 37], color: colors[1], family_name: "ANPEP"},
-  { exons_in_family: [6, 12, 14, 16, 17, 18, 19, 20, 23, 24, 25, 26, 28, 29, 30, 32, 33, 34, 35, 38], color: colors[2], family_name: "TRHDE"},
-  { exons_in_family: [7, 13, 15, 16, 17, 18, 19, 20, 23, 24, 25, 26, 28, 29, 30, 32, 33, 34, 35, 39], color: colors[3], family_name: "ENPEP"},
-  { exons_in_family: [3, 8, 13, 15, 16, 17, 18, 19, 21, 24, 25, 27, 29, 31, 33, 34, 35, 40], color: colors[4], family_name: "LNPEP"},
-  { exons_in_family: [2, 9, 13, 15, 16, 17, 18, 19, 21, 22, 24, 25, 27, 29, 31, 33, 34, 35, 41], color: colors[5], family_name: "ERAP1"},
-  { exons_in_family: [1, 10, 13, 15, 16, 17, 18, 19, 21, 22, 24, 25, 27, 29, 31, 33, 34, 35, 42], color: colors[6], family_name: "ERAP2"},
+  { exons_in_family: [4, 11, 16, 17, 18, 19, 20, 23, 24, 25, 26, 28, 29, 30, 32, 33, 34, 35, 36], family_name: "APQ"},
+  { exons_in_family: [0, 5, 12, 14, 16, 17, 18, 19, 20, 23, 24, 25, 26, 28, 29, 30, 32, 33, 34, 35, 37], family_name: "ANPEP"},
+  { exons_in_family: [6, 12, 14, 16, 17, 18, 19, 20, 23, 24, 25, 26, 28, 29, 30, 32, 33, 34, 35, 38], family_name: "TRHDE"},
+  { exons_in_family: [7, 13, 15, 16, 17, 18, 19, 20, 23, 24, 25, 26, 28, 29, 30, 32, 33, 34, 35, 39], family_name: "ENPEP"},
+  { exons_in_family: [3, 8, 13, 15, 16, 17, 18, 19, 21, 24, 25, 27, 29, 31, 33, 34, 35, 40], family_name: "LNPEP"},
+  { exons_in_family: [2, 9, 13, 15, 16, 17, 18, 19, 21, 22, 24, 25, 27, 29, 31, 33, 34, 35, 41], family_name: "ERAP1"},
+  { exons_in_family: [1, 10, 13, 15, 16, 17, 18, 19, 21, 22, 24, 25, 27, 29, 31, 33, 34, 35, 42], family_name: "ERAP2"},
 ]
 
 // stringify the javascript object
 var gfv_json_string = JSON.stringify(gfv_json, null);
-
-// function to generate random colors
-function getRandomColor() {
-    return '#'+(5*Math.floor(Math.random()*4)).toString(16)+
-    (5*Math.floor(Math.random()*4)).toString(16)+
-    (5*Math.floor(Math.random()*4)).toString(16);
-}

@@ -86,7 +86,7 @@ function hsvToRgb(h, s, v) {
 	return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
 }
 
-function randomColors(total)
+function create_random_colors(total)
 {
     var i = 360 / (total - 1); // distribute the colors evenly on the hue range
     var r = []; // hold the generated colors
