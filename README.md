@@ -1,5 +1,46 @@
 # Meeting Notes
 
+## Feb 15, 2018 - Updated To-dos
+
+Development:
+1. Backend code (pre-JSON) - Ethan [ ]
+	+ Complete development 
+	+ Test
+	+ Refine
+2. Visualization (post-JSON) - Micah [ ]
+	+ Complete development
+		+ Save as image option
+			+ JPEG
+		+ Automatically choose the colors if not present in JSON
+	+ Test
+	+ Refine (return to Test)
+3. Create test data sets - Dr. Carroll
+ 	+ Unrelated genes (just needs JSON format answer key)
+	+ Add unrelated genes to a gene family (just needs JSON format answer key)
+
+Deployment:
+1. Domain name registration
+	+ Decide on a name - All
+	+ Register - Dr. Carroll
+2. Web server set-up - Micah
+3. Web documentation (user's manual) - ?
+
+Writing:
+1. Write draft
+	+ Methods
+		+ Backend (Ethan) [ ]
+		+ Visualization (Micah) [ ]
+	+ Results (Ethan & Micah) [ ]
+	+ Conclusion - Drs. Carroll & Seipelt-Thiemann [waiting on Methods & Results milestones]
+	+ Introduction - Dr. Seipelt-Thiemann [waiting on Conclusion milestones]
+	+ Abstract
+2. Share with co-authors - Dr. Carroll
+3. Revise draft
+4. Return to 1.
+
+Manuscript submission - Dr. Carroll
+
+
 ## Feb 5, 2018 - Updated To-dos
 
 Development:
