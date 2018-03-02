@@ -15,8 +15,10 @@ Development:
 	+ Test
 	+ Refine (return to Test)
 3. Create test data sets - Dr. Carroll
- 	+ Unrelated genes (just needs JSON format answer key)
-	+ Add unrelated genes to a gene family (just needs JSON format answer key)
+ 	+ JSON format
+		+ albuminGeneFamily
+		+ albuminWithRandom
+		+ randomGenes
 
 Deployment:
 1. Domain name registration
