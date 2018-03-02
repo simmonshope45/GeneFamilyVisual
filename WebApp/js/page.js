@@ -65,10 +65,18 @@ function triggerDownload (imgURI, fileName) {
 function download_png() {
   var svg = document.getElementById("graph");
   var filename = "graph.png";
-  download_svg_helper(svg, filename);
+  download_svg_helper(svg, filename, 'png');
 }
 
-function download_svg_helper(svg, fileName) {
+function download_jpeg() {
+  var svg = document.getElementById("graph");
+  var filename = "graph.jpeg";
+  download_svg_helper(svg, filename, 'jpeg');
+}
+
+
+function download_svg_helper(svg, fileName, format = 'png') {
+
   var copy = svg.cloneNode(true);
   copyStylesInline(copy, svg);
   var canvas = document.createElement("canvas");
@@ -77,6 +85,9 @@ function download_svg_helper(svg, fileName) {
   canvas.height = p.height;
   var ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, p.width, p.height);
+  ctx.fillStyle="white";
+  ctx.fillRect(0, 0, p.width, p.height);
+
   var data = (new XMLSerializer()).serializeToString(copy);
   var DOMURL = window.URL || window.webkitURL || window;
   var img = new Image();
@@ -92,8 +103,8 @@ function download_svg_helper(svg, fileName) {
     }
     else {
         var imgURI = canvas
-            .toDataURL("image/png")
-            .replace("image/png", "image/octet-stream");
+            .toDataURL("image/" + format)
+            .replace("image/" + format, "image/octet-stream");
         triggerDownload(imgURI, fileName);
     }
     document.removeChild(canvas);
