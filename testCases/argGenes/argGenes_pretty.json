@@ -1,37 +1,37 @@
 {
     "exon_list": [
 	{
-	    "column": 1,
+	    "column": 0,
 	    "text": "58/79/85/88",
 	    "length": 1,
 	    "fullyUTR": 0
 	},
 	{
-	    "column": 2,
+	    "column": 1,
 	    "text": "49/52/58/70",
 	    "length": 1,
 	    "fullyUTR": 0
 	},
 	{
-	    "column": 3,
+	    "column": 2,
 	    "text": "121/133/139",
 	    "length": 1,
 	    "fullyUTR": 0
 	},
 	{
-	    "column": 4,
+	    "column": 3,
 	    "text": "212",
 	    "length": 1,
 	    "fullyUTR": 0
 	},
 	{
-	    "column": 5,
+	    "column": 4,
 	    "text": "133",
 	    "length": 1,
 	    "fullyUTR": 0
 	},
 	{
-	    "column": 6,
+	    "column": 5,
 	    "text": "95/98",
 	    "length": 1,
 	    "fullyUTR": 0
@@ -43,43 +43,43 @@
 	    "fullyUTR": 0
 	},
 	{
-	    "column": 8,
+	    "column": 7,
 	    "text": "203/215",
 	    "length": 1,
 	    "fullyUTR": 0
 	},
 	{
-	    "column": 9,
+	    "column": 8,
 	    "text": "130/133",
 	    "length": 1,
 	    "fullyUTR": 0
 	},
 	{
-	    "column": 10,
+	    "column": 9,
 	    "text": "98",
 	    "length": 1,
 	    "fullyUTR": 0
 	},
 	{
-	    "column": 11,
+	    "column": 10,
 	    "text": "133/139",
 	    "length": 1,
 	    "fullyUTR": 0
 	},
 	{
-	    "column": 12,
+	    "column": 11,
 	    "text": "224/227",
 	    "length": 1,
 	    "fullyUTR": 0
 	},
 	{
-	    "column": 13,
+	    "column": 12,
 	    "text": "133",
 	    "length": 1,
 	    "fullyUTR": 0
 	},
 	{
-	    "column": 14,
+	    "column": 13,
 	    "text": "33/39/42/54/66",
 	    "length": 1,
 	    "fullyUTR": 0
