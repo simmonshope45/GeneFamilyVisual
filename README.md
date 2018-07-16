@@ -1,5 +1,44 @@
 # Meeting Notes
 
+## July 16, 2018 - Updated To-dos
+
+Development:
+1. Backend code (pre-JSON)
+	+ Complete development 
+	+ Test
+	+ Refine
+2. Visualization (post-JSON)
+	+ Test
+3. Create test data sets - Dr. Carroll
+ 	+ JSON format
+		+ albuminGeneFamily
+		+ albuminWithRandom
+		+ randomGenes
+
+Deployment:
+1. Domain name registration
+	+ Decide on a name - All
+	+ Register - Dr. Carroll
+2. Web server set-up - Micah
+3. Web documentation (user's manual) - ?
+
+Writing:
+1. Write draft
+	+ Outline
+	+ Methods
+		+ Backend
+		+ Visualization
+	+ Results
+	+ Conclusion - Drs. Carroll & Seipelt-Thiemann [waiting on Methods & Results milestones]
+	+ Introduction - Dr. Seipelt-Thiemann [waiting on Conclusion milestones]
+	+ Abstract
+2. Share with co-authors - Dr. Carroll
+3. Revise draft
+4. Return to 1.
+
+Manuscript submission - Dr. Carroll
+
+
 ## Feb 15, 2018 - Updated To-dos
 
 Development:
