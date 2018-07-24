@@ -1,6 +1,6 @@
 # Meeting Notes
 
-## July 16, 2018 - Updated To-dos
+## July 24, 2018 - Updated To-dos
 
 Development:
 1. Backend code (pre-JSON)
@@ -8,6 +8,9 @@ Development:
 	+ Test
 	+ Refine
 2. Visualization (post-JSON)
+	+ Dynamic Title      
+	+ Remove "Genetic dataset ... algorithm."
+	+ Enlarge ovals on hover over (just like the circles)?
 	+ Test
 3. Create test data sets - Dr. Carroll
  	+ JSON format
