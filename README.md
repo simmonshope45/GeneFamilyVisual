@@ -8,9 +8,10 @@ Development:
 	+ Test
 	+ Refine
 2. Visualization (post-JSON)
-	+ Dynamic Title      
+	+ Update/Dynamic Title      
 	+ Remove "Genetic dataset ... algorithm."
 	+ Enlarge ovals on hover over (just like the circles)?
+	+ About link
 	+ Test
 3. Create test data sets - Dr. Carroll
  	+ JSON format
